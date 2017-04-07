@@ -84,6 +84,7 @@ import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.LauncherSettings.Favorites;
 import com.android.launcher3.accessibility.LauncherAccessibilityDelegate;
 import com.android.launcher3.allapps.AllAppsContainerView;
+import com.android.launcher3.allapps.PredictiveAppsProvider;
 import com.android.launcher3.allapps.AllAppsTransitionController;
 import com.android.launcher3.allapps.DefaultAppSearchController;
 import com.android.launcher3.anim.AnimationLayerSet;
@@ -357,6 +358,8 @@ public class Launcher extends BaseActivity
         if (LauncherAppState.PROFILE_STARTUP) {
             Trace.beginSection("Launcher-onCreate");
         }
+
+ predictiveAppsProvider = new PredictiveAppsProvider(this);
 
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.preOnCreate();
@@ -1076,7 +1079,7 @@ public class Launcher extends BaseActivity
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onResume();
         }
-
+ tryAndUpdatePredictedApps();
     }
 
     @Override
@@ -2772,6 +2775,10 @@ public class Launcher extends BaseActivity
             } else if (user == null || user.equals(Process.myUserHandle())) {
                 // Could be launching some bookkeeping activity
                 startActivity(intent, optsBundle);
+
+if (isAllAppsVisible()) {
+                    predictiveAppsProvider.updateComponentCount(intent.getComponent());
+                }
             } else {
                 LauncherAppsCompat.getInstance(this).startActivityForProfile(
                         intent.getComponent(), user, intent.getSourceBounds(), optsBundle);
@@ -3140,15 +3147,21 @@ public class Launcher extends BaseActivity
      * Updates the set of predicted apps if it hasn't been updated since the last time Launcher was
      * resumed.
      */
-    public void tryAndUpdatePredictedApps() {
+   public void tryAndUpdatePredictedApps() {
+        List<ComponentKey> apps;
         if (mLauncherCallbacks != null) {
-            List<ComponentKey> apps = mLauncherCallbacks.getPredictedApps();
-            if (apps != null) {
-                mAppsView.setPredictedApps(apps);
-                getUserEventDispatcher().setPredictedApps(apps);
-            }
+            apps = mLauncherCallbacks.getPredictedApps();
+        } else {
+            apps = predictiveAppsProvider.getPredictions();
+            predictiveAppsProvider.updateTopPredictedApps();
+        }
+
+        if (apps != null) {
+            mAppsView.setPredictedApps(apps);
         }
     }
+
+private PredictiveAppsProvider predictiveAppsProvider;
 
     void lockAllApps() {
         // TODO
