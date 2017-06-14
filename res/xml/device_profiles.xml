@@ -97,15 +97,15 @@
         launcher:defaultLayoutId="@xml/default_workspace_4x4" />
 
     <profile
-        launcher:name="Nexus G"
+         launcher:name="Nexus G"
         launcher:minWidthDps="387.0"
         launcher:minHeightDps="659.0"
-        launcher:numRows="5"
-        launcher:numColumns="5"
+        launcher:numRows="6"
+        launcher:numColumns="6"
         launcher:numFolderRows="4"
         launcher:numFolderColumns="4"
         launcher:minAllAppsPredictionColumns="4"
-        launcher:numHotseatIcons="5"
+        launcher:numHotseatIcons="6"
         launcher:iconSize="58.0"
         launcher:iconTextSize="13.0"
         launcher:hotseatIconSize="58.0"
