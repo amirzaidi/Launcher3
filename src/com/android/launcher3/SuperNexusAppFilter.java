@@ -11,6 +11,7 @@ public class SuperNexusAppFilter extends AppFilter
         mHide = new HashSet();
         mHide.add(ComponentName.unflattenFromString("com.google.android.googlequicksearchbox/.VoiceSearchActivity"));
         mHide.add(ComponentName.unflattenFromString("com.google.android.apps.wallpaper/.picker.CategoryPickerActivity"));
+        mHide.add(ComponentName.unflattenFromString("com.google.android.googlequicksearchbox/com.google.android.launcher.GEL"));
     }
 
     public boolean shouldShowApp(final ComponentName componentName) {
