@@ -2659,18 +2659,22 @@ public class Launcher extends Activity
             return;
         }
 
+        Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+
         String pickerPackage = getString(R.string.wallpaper_picker_package);
-        if (TextUtils.isEmpty(pickerPackage) || !PackageManagerHelper.isAppEnabled(getPackageManager(), pickerPackage)) {
+        if (TextUtils.isEmpty(pickerPackage)) {
             pickerPackage =  PackageManagerHelper.getWallpaperPickerPackage(getPackageManager());
+        }
+
+        if (PackageManagerHelper.isAppEnabled(getPackageManager(), pickerPackage)) {
+            intent.setPackage(pickerPackage);
         }
 
         int pageScroll = mWorkspace.getScrollForPage(mWorkspace.getPageNearestToCenterOfScreen());
         float offset = mWorkspace.mWallpaperOffset.wallpaperOffsetForScroll(pageScroll);
 
         setWaitingForResult(new PendingRequestArgs(new ItemInfo()));
-        Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER)
-                .setPackage(pickerPackage)
-                .putExtra(Utilities.EXTRA_WALLPAPER_OFFSET, offset);
+        intent.putExtra(Utilities.EXTRA_WALLPAPER_OFFSET, offset);
         intent.setSourceBounds(getViewBounds(v));
         startActivityForResult(intent, REQUEST_PICK_WALLPAPER, getActivityLaunchOptions(v));
     }
