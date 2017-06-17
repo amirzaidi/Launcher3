@@ -7,8 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.content.Intent;
 
-import com.android.launcher3.reflection.b_research;
-import com.android.launcher3.reflection.m;
 import android.content.ComponentName;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +27,7 @@ public class b
 
     static {
         i = new String[] { "com.whatsapp", "com.facebook.katana", "com.facebook.orca", "com.google.android.youtube", "com.yodo1.crossyroad", "com.spotify.music", "com.android.chrome", "com.instagram.android", "com.google.android.gm", "com.skype.raider", "com.snapchat.android", "com.viber.voip", "com.twitter.android", "com.android.phone", "com.google.android.music", "com.google.android.calendar", "com.google.android.apps.genie.geniewidget", "com.netflix.mediaclient", "bbc.iplayer.android", "com.google.android.videos", "com.android.settings", "com.amazon.mShop.android.shopping", "com.microsoft.office.word", "com.google.android.apps.docs", "com.google.android.keep", "com.google.android.apps.plus", "com.google.android.talk" };
+        //i = new String[] {};
     }
 
     public b(final Context context) {
@@ -45,13 +44,13 @@ public class b
     }
 
     private ArrayList m(final float n) {
-        final ArrayList<b_research> list = new ArrayList<>(b.i.length);
+        final ArrayList<com.android.launcher3.reflection.predictor.b> list = new ArrayList<>(b.i.length);
         for (int i = 0; i < b.i.length; ++i) {
             if (this.j[i].state == -1) {
                 this.n(i);
             }
             if (this.j[i].state == 1) {
-                list.add(new b_research(com.android.launcher3.reflection.m.aK(new ComponentName(this.j[i].packageName, this.j[i].n)), n - list.size()));
+                list.add(new com.android.launcher3.reflection.predictor.b(com.android.launcher3.reflection.m.aK(new ComponentName(this.j[i].packageName, this.j[i].n)), n - list.size()));
             }
         }
         return list;
@@ -59,33 +58,28 @@ public class b
 
     private void n(final int n) {
         final Intent launchIntentForPackage = this.mPackageManager.getLaunchIntentForPackage(b.i[n]);
-        while (true) {
-            Label_0164: {
-                if (launchIntentForPackage == null) {
-                    break Label_0164;
-                }
-                final ResolveInfo resolveActivity = this.mPackageManager.resolveActivity(launchIntentForPackage, 0);
-                if (resolveActivity == null) {
-                    break Label_0164;
-                }
-                final ActivityInfo activityInfo = resolveActivity.activityInfo;
-                if (activityInfo != null) {
-                    String n2 = activityInfo.name;
-                    if (n2.startsWith(".")) {
-                        n2 = activityInfo.packageName + n2;
-                    }
-                    this.j[n].state = 1;
-                    this.j[n].n = n2;
-                }
-                else {
-                    this.j[n].state = 0;
-                    this.j[n].n = "";
-                }
-                return;
+        Label_0164: {
+            if (launchIntentForPackage == null) {
+                break Label_0164;
             }
-            final ActivityInfo activityInfo = null;
-            break;
-            //continue;
+            final ResolveInfo resolveActivity = this.mPackageManager.resolveActivity(launchIntentForPackage, 0);
+            if (resolveActivity == null) {
+                break Label_0164;
+            }
+            final ActivityInfo activityInfo = resolveActivity.activityInfo;
+            if (activityInfo != null) {
+                String n2 = activityInfo.name;
+                if (n2.startsWith(".")) {
+                    n2 = activityInfo.packageName + n2;
+                }
+                this.j[n].state = 1;
+                this.j[n].n = n2;
+            }
+            else {
+                this.j[n].state = 0;
+                this.j[n].n = "";
+            }
+            return;
         }
     }
 
@@ -93,19 +87,19 @@ public class b
         final float n = 1.0f;
         float n2;
         if (list.size() > 0) {
-            n2 = ((b_research) list.get(list.size() - 1)).Le - n;
+            n2 = ((com.android.launcher3.reflection.predictor.b) list.get(list.size() - 1)).Le - n;
         }
         else {
             n2 = n;
         }
         final ArrayList m = this.m(n2);
         this.k.clear();
-        final Iterator<b_research> iterator = list.iterator();
+        final Iterator<com.android.launcher3.reflection.predictor.b> iterator = list.iterator();
         while (iterator.hasNext()) {
             this.k.add(iterator.next().Ld);
         }
         for (Object o : m) {
-            final b_research b = (b_research) o;
+            final com.android.launcher3.reflection.predictor.b b = (com.android.launcher3.reflection.predictor.b) o;
             if (!this.k.contains(b.Ld)) {
                 list.add(b);
                 if (list2 == null) {

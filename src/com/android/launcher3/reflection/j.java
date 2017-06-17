@@ -46,21 +46,20 @@ public class j
         this.aP = ap;
     }
 
-    private ArrayList aB(final String s, final com.android.launcher3.reflection.nano.a a, final com.android.launcher3.reflection.c2.d d) {
+    private ArrayList aB(final String s, final com.android.launcher3.reflection.common.nano.a a, final com.android.launcher3.reflection.c2.d d) {
         final int n = 12;
         List list = null;
         this.aT.f();
-        //final com.google.research.reflection.predictor.a ad = this.aS.ad(s, a);
-        //final double[] rg = ad.RG();
-        //final ArrayList ri = ad.RI();
-        final ArrayList ri = new ArrayList();
+        final com.android.launcher3.reflection.predictor.a ad = this.aS.ad(s, a);
+        final double[] rg = ad.RG();
+        final ArrayList ri = ad.RI();
         List list2;
         List list3;
         List list4;
         List list5;
         if (d != null) {
             list2 = new ArrayList();
-            list3 = new ArrayList(/*ri*/);
+            list3 = new ArrayList(ri);
             list4 = new ArrayList();
             list5 = new ArrayList();
             list = new ArrayList();
@@ -72,14 +71,14 @@ public class j
             list3 = null;
         }
         this.aV.c(ri, list2);
-        this.aW.c(ri, list4);
+        this.aW.c(ri, list4); //filter.b defaults
         this.aT.c(ri, list);
         this.aU.c(ri, list5);
         if (d != null) {
-            /*if (rg != null) {
-                d.ak = new com.android.launcher3.reflection.c.e();
+            if (rg != null) {
+                d.ak = new com.android.launcher3.reflection.c2.e();
                 d.ak.aq = rg;
-            }*/
+            }
             d.al = this.az(ri);
             d.am = this.az(list3);
             d.an = this.az(list4);
@@ -96,8 +95,8 @@ public class j
         final com.android.launcher3.reflection.c2.c[] array = new com.android.launcher3.reflection.c2.c[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             final com.android.launcher3.reflection.c2.c c = new com.android.launcher3.reflection.c2.c();
-            c.ag = ((b_research) list.get(i)).Ld;
-            c.ah = ((b_research) list.get(i)).Le;
+            c.ag = ((com.android.launcher3.reflection.predictor.b) list.get(i)).Ld;
+            c.ah = ((com.android.launcher3.reflection.predictor.b) list.get(i)).Le;
             array[i] = c;
         }
         return array;
@@ -112,11 +111,10 @@ public class j
             }
             final Iterator iterator = this.aY.iterator();
             while (iterator.hasNext()) {
-                //iterator.next().F();
+                ((k)iterator.next()).F();
             }
         }
     }
-    // monitorexit(this)
 
     String aC(final ComponentName componentName, final long n) {
         return this.aZ.y(componentName, n);
@@ -126,7 +124,7 @@ public class j
         com.android.launcher3.reflection.c2.a a = null;
         Preconditions.assertNonUiThread();
         final Calendar instance = Calendar.getInstance();
-        final com.android.launcher3.reflection.nano.a z = this.aZ.z(s, "predict", instance, this.aP.V(), SystemClock.elapsedRealtime(), "unknown");
+        final com.android.launcher3.reflection.common.nano.a z = this.aZ.z(s, "predict", instance, this.aP.V(), SystemClock.elapsedRealtime(), "unknown");
         com.android.launcher3.reflection.c2.d aa;
         if (this.aQ != null) {
             a = new com.android.launcher3.reflection.c2.a();
