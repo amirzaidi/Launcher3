@@ -10,7 +10,7 @@ class FirstPageComponentsFilterIntentParser
         try {
             return Intent.parseUri(s, 0);
         }
-        catch (URISyntaxException ex) {
+        catch (Exception ex) {
             Log.e("Reflection.1stPFilter", String.format("Invalid intent URI %s", s), (Throwable)ex);
             return null;
         }
