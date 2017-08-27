@@ -1,4 +1,8 @@
-The rootless Pixel Launcher was a massive success [the first time](https://www.reddit.com/r/Android/comments/6gn8f9/rootless_pixel_launcher_port/), and I promised to make a follow up when Android 8 sources officially released. I have been working non-stop for the past few days getting everything working but the end result made it worth it. This time I did not fully stick to my "don't fix what's not broken" philosophy and went a bit further, adding some features which I thought would be nice to have. Let's start with the feature list.
+# Rootless Pixel Launcher
+
+![Rootless Pixel Launcher in action](https://i.imgur.com/wTCa3uW.gif)
+
+The official Pixel Launcher has a lot of exclusive features like the Google Now panel and G Search Pill that only work while it is running as a system app. When regular users install the APK file they get a gimped version of the app that refuses to give them these features. However, after seeing the ParanoidAndroid commits to get the Google Now panel working I realized these were not limitations of being installed as a normal app, instead Google intentionally made it work this way, most probably to keep the features exclusive to the Pixel phones as a selling point like HDR+. The older Google Now Launcher could make use of the Google Now panel too when you installed it from the Play Store.
 
 --------
 
@@ -9,6 +13,14 @@ The rootless Pixel Launcher was a massive success [the first time](https://www.r
 **Sources**: https://github.com/amirzaidi/Launcher3/commits/o
 
 *Report bugs with a logcat, if you don't know how to take one please use Google. I do not ask for donations and I did not add ads in the launcher. If you want to support me, wish me a happy birthday on September the 6th.* 
+
+--------
+
+## Version 2.1 is out!
+
+- Backports: transparent hotseat, Search Apps layout, transparent QsbConnector
+
+- Automatically hide the Google Now feed page and Google Pill when the Google App is disabled
 
 --------
 
@@ -111,20 +123,6 @@ No, this deviates too much from the stable Launcher3 base.
 > Can I trust installing this random APK?
 
 Everything is open source, so start Android Studio and compile it yourself if you don't want to use my prebuilt version.
-
---------
-
-Sorry for the weird 2.0.1 pre-release, but it was 5am and I wanted to have a quick fix out. Thanks to /u/Deletescape's Lawnchair I fixed the shadow around folder AND pop-up visual bugs. Please grab 2.0.2 for a more stable experience.
-
---------
-
-#Version 2.1 is out!
-
-- Backports: transparent hotseat, Search Apps layout, transparent QsbConnector
-
-- Automatically hide the Google Now feed page and Google Pill when the Google App is disabled
-
-**More FAQ**
 
 > I only have on option in the settings menu
 
