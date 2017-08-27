@@ -10,8 +10,6 @@ The official Pixel Launcher has a lot of exclusive features like the Google Now 
 
 **Pictures**: https://goo.gl/photos/C6kWrgMV3jMfL2Ld9
 
-**Sources**: https://github.com/amirzaidi/Launcher3/commits/o
-
 *Report bugs with a logcat, if you don't know how to take one please use Google. I do not ask for donations and I did not add ads in the launcher. If you want to support me, wish me a happy birthday on September the 6th.* 
 
 --------
@@ -72,9 +70,7 @@ The official Pixel Launcher has a lot of exclusive features like the Google Now 
 
 - Backport of circle icons
 
-From my previous post:
-
-> The A-B tests and the microphone icon are not included, so what you see is what you get. There are no toggles for any of the features.
+*The A-B tests and the microphone icon are not included, so what you see is what you get. There are no toggles for any of the features.*
 
 --------
 
