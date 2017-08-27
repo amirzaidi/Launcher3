@@ -1,6 +1,8 @@
 # Rootless Pixel Launcher
 
-![Rootless Pixel Launcher in action](https://i.imgur.com/wTCa3uW.gif)
+<p align="center">
+  <img src="RPLinAction.gif"/>
+</p>
 
 The official Pixel Launcher has a lot of exclusive features like the Google Now panel and G Search Pill that only work while it is running as a system app. When regular users install the APK file they get a gimped version of the app that refuses to give them these features. However, after seeing the ParanoidAndroid commits to get the Google Now panel working I realized these were not limitations of being installed as a normal app, instead Google intentionally made it work this way, most probably to keep the features exclusive to the Pixel phones as a selling point like HDR+. The older Google Now Launcher could make use of the Google Now panel too when you installed it from the Play Store.
 
