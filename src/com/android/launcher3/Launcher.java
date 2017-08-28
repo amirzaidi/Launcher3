@@ -31,6 +31,7 @@ import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks2;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -54,6 +55,7 @@ import android.os.StrictMode;
 import android.os.SystemClock;
 import android.os.Trace;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.Selection;
@@ -363,6 +365,15 @@ public class Launcher extends BaseActivity
         }
 
         super.onCreate(savedInstanceState);
+
+        ContentResolver cr = getContentResolver();
+        String setting = "enabled_notification_listeners";
+        String permissionString = Settings.Secure.getString(cr, setting);
+        if (permissionString == null)
+            permissionString = "";
+        if (!permissionString.contains(getPackageName() + "/"))
+            Settings.Secure.putString(cr, setting, (permissionString.equals("") ? "" : permissionString + ":") +
+                    new ComponentName(getPackageName(), getPackageName() + ".notification.NotificationListener").flattenToString());
 
         LauncherAppState app = LauncherAppState.getInstance(this);
 
