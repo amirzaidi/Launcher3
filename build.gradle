@@ -36,6 +36,9 @@ android {
             testApplicationId 'com.android.launcher3.tests'
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+    }
     sourceSets {
         main {
             res.srcDirs = ['res']
