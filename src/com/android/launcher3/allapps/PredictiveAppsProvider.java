@@ -1,13 +1,11 @@
 package com.android.launcher3.allapps;
 
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Process;
 import android.preference.PreferenceManager;
 
-import com.android.launcher3.Launcher;
-import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.util.ComponentKey;
 
 import java.util.ArrayList;
@@ -38,8 +36,7 @@ public class PredictiveAppsProvider {
         sharedPreferences.edit().putLong(key, current + 1).commit();
 
         // ensure that the set of predictive apps contains this one
-        Set<String> predictiveApps =
-                sharedPreferences.getStringSet(PREDICTIVE_APPS_KEY, new HashSet<String>());
+        Set<String> predictiveApps = sharedPreferences.getStringSet(PREDICTIVE_APPS_KEY, new HashSet<String>());
         if (!predictiveApps.contains(key)) {
             predictiveApps.add(key);
             sharedPreferences.edit().putStringSet(PREDICTIVE_APPS_KEY, predictiveApps).commit();
@@ -50,9 +47,8 @@ public class PredictiveAppsProvider {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List< PredictedApp > allPredictions = new ArrayList<>();
-                Set<String> predictiveAppsSet =
-                        sharedPreferences.getStringSet(PREDICTIVE_APPS_KEY, new HashSet<String>());
+                List<PredictedApp> allPredictions = new ArrayList<>();
+                Set<String> predictiveAppsSet = sharedPreferences.getStringSet(PREDICTIVE_APPS_KEY, new HashSet<String>());
 
                 for (String s : predictiveAppsSet) {
                     allPredictions.add(new PredictedApp(buildComponentFromString(s),
@@ -80,27 +76,20 @@ public class PredictiveAppsProvider {
             return new ArrayList<>();
         }
 
-        String[] topPredictions = predictions.split(" ");
+        String[] topPredictions = predictions.split("\n");
         List<ComponentKey> keys = new ArrayList<>();
 
-        for (int i = 0; i < topPredictions.length - 1; i++) {
-            keys.add(buildComponentKey(topPredictions[i] + " " + topPredictions[i + 1]));
-        }
+        for (int i = 0; i < topPredictions.length; i++)
+            keys.add(buildComponentKey(topPredictions[i]));
 
         return keys;
     }
 
     private String buildStringFromAppList(List<PredictedApp> apps) {
         String string = "";
-        for (PredictedApp app : apps) {
-            string += buildComponentString(app.component) + " ";
-        }
-
-        try {
-            return string.substring(0, string.length() - 1);
-        } catch (StringIndexOutOfBoundsException e) {
-            return "";
-        }
+        for (PredictedApp app : apps)
+            string += buildComponentString(app.component) + "\n";
+        return string.length() == 0 ? string : string.substring(0, string.length() - 1);
     }
 
     private String buildComponentString(ComponentName component) {
@@ -117,7 +106,7 @@ public class PredictiveAppsProvider {
     }
 
     private ComponentKey buildComponentKey(ComponentName component) {
-        return new ComponentKey(component, UserHandleCompat.myUserHandle());
+        return new ComponentKey(component, Process.myUserHandle());
     }
 
     private class PredictedApp {

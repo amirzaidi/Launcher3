@@ -125,4 +125,5 @@
     <string name="notification_dismissed" msgid="6002233469409822874">"اعلان رد شد"</string>
     <string name="label_search">جستجو</string>
     <string name="week_day_format">%1$s، %2$s</string>
+    <string name="title_app_suggestions">پیشنهادات برنامه</string>
 </resources>

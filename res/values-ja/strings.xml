@@ -125,4 +125,5 @@
     <string name="notification_dismissed" msgid="6002233469409822874">"通知を非表示にしました"</string>
     <string name="label_search">検索</string>
     <string name="week_day_format">%1$s、%2$s 年</string>
+    <string name="title_app_suggestions">おすすめのアプリ</string>
 </resources>

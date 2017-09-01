@@ -266,6 +266,7 @@ public class Launcher extends BaseActivity
     private ExtractedColors mExtractedColors;
     private LauncherAccessibilityDelegate mAccessibilityDelegate;
     private Handler mHandler = new Handler();
+    private PredictiveAppsProvider predictiveAppsProvider;
     private boolean mIsResumeFromActionScreenOff;
     private boolean mHasFocus = false;
     private boolean mAttached = false;
@@ -359,7 +360,7 @@ public class Launcher extends BaseActivity
             Trace.beginSection("Launcher-onCreate");
         }
 
- predictiveAppsProvider = new PredictiveAppsProvider(this);
+        predictiveAppsProvider = new PredictiveAppsProvider(this);
 
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.preOnCreate();
@@ -1079,7 +1080,8 @@ public class Launcher extends BaseActivity
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onResume();
         }
- tryAndUpdatePredictedApps();
+
+        tryAndUpdatePredictedApps();
     }
 
     @Override
@@ -2776,9 +2778,8 @@ public class Launcher extends BaseActivity
                 // Could be launching some bookkeeping activity
                 startActivity(intent, optsBundle);
 
-if (isAllAppsVisible()) {
+                if (isAllAppsVisible())
                     predictiveAppsProvider.updateComponentCount(intent.getComponent());
-                }
             } else {
                 LauncherAppsCompat.getInstance(this).startActivityForProfile(
                         intent.getComponent(), user, intent.getSourceBounds(), optsBundle);
@@ -3148,20 +3149,13 @@ if (isAllAppsVisible()) {
      * resumed.
      */
    public void tryAndUpdatePredictedApps() {
-        List<ComponentKey> apps;
-        if (mLauncherCallbacks != null) {
-            apps = mLauncherCallbacks.getPredictedApps();
-        } else {
-            apps = predictiveAppsProvider.getPredictions();
-            predictiveAppsProvider.updateTopPredictedApps();
-        }
-
-        if (apps != null) {
-            mAppsView.setPredictedApps(apps);
-        }
-    }
-
-private PredictiveAppsProvider predictiveAppsProvider;
+       if (getSharedPrefs().getBoolean("pref_show_predictions", true)) {
+           mAppsView.setPredictedApps(predictiveAppsProvider.getPredictions());
+           predictiveAppsProvider.updateTopPredictedApps();
+       } else {
+           mAppsView.setPredictedApps(new ArrayList<ComponentKey>());
+       }
+   }
 
     void lockAllApps() {
         // TODO

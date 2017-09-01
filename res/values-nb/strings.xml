@@ -125,4 +125,5 @@
     <string name="notification_dismissed" msgid="6002233469409822874">"Varselet ble avvist"</string>
     <string name="label_search">Søk</string>
     <string name="week_day_format">%1$s, %2$s</string>
+    <string name="title_app_suggestions">Appanbefalinger</string>
 </resources>

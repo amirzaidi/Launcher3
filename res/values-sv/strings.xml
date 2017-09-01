@@ -125,4 +125,5 @@
     <string name="notification_dismissed" msgid="6002233469409822874">"Aviseringen togs bort"</string>
     <string name="label_search">Sök</string>
     <string name="week_day_format">%1$s, %2$s</string>
+    <string name="title_app_suggestions">Appförslag</string>
 </resources>

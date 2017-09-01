@@ -125,4 +125,5 @@
     <string name="notification_dismissed" msgid="6002233469409822874">"알림이 해제되었습니다."</string>
     <string name="label_search">검색</string>
     <string name="week_day_format">%2$s %1$s</string>
+    <string name="title_app_suggestions">앱 추천</string>
 </resources>

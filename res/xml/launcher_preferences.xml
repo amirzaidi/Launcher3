@@ -17,6 +17,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
+        android:key="pref_show_predictions"
+        android:title="@string/title_app_suggestions"
+        android:defaultValue="true"
+        />
+
+    <SwitchPreference
         android:key="pref_add_icon_to_home"
         android:title="@string/auto_add_shortcuts_label"
         android:summary="@string/auto_add_shortcuts_description"
