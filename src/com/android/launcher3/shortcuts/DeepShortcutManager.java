@@ -19,9 +19,15 @@ package com.android.launcher3.shortcuts;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.LauncherApps.ShortcutQuery;
 import android.content.pm.ShortcutInfo;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -31,6 +37,8 @@ import android.util.Log;
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.Utilities;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,9 +67,11 @@ public class DeepShortcutManager {
 
     private final LauncherApps mLauncherApps;
     private boolean mWasLastCallSuccess;
+    private Context mContext;
 
     private DeepShortcutManager(Context context) {
         mLauncherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+        mContext = context;
     }
 
     public static boolean supportsShortcuts(ItemInfo info) {
@@ -143,18 +153,19 @@ public class DeepShortcutManager {
     }
 
     @TargetApi(25)
-    public void startShortcut(String packageName, String id, Rect sourceBounds,
+    public void startShortcut(String packageName, String id, Intent intent,
           Bundle startActivityOptions, UserHandle user) {
         if (Utilities.ATLEAST_NOUGAT_MR1) {
             try {
-                mLauncherApps.startShortcut(packageName, id, sourceBounds,
+                mLauncherApps.startShortcut(packageName, id, intent.getSourceBounds(),
                         startActivityOptions, user);
                 mWasLastCallSuccess = true;
             } catch (SecurityException|IllegalStateException e) {
                 Log.e(TAG, "Failed to start shortcut", e);
                 mWasLastCallSuccess = false;
             }
-        }
+        } else
+            mContext.startActivity(intent, startActivityOptions);
     }
 
     @TargetApi(25)
@@ -169,7 +180,10 @@ public class DeepShortcutManager {
                 Log.e(TAG, "Failed to get shortcut icon", e);
                 mWasLastCallSuccess = false;
             }
+        } else {
+            return ((ShortcutInfoBackport) shortcutInfo).getIcon(density);
         }
+
         return null;
     }
 
@@ -228,7 +242,69 @@ public class DeepShortcutManager {
             }
             return shortcutInfoCompats;
         } else {
-            return Collections.EMPTY_LIST;
+            List<ShortcutInfoCompat> shortcutInfoCompats = new ArrayList<>();
+            try {
+                if (packageName == null) {
+                    List<LauncherActivityInfo> infoList = mLauncherApps.getActivityList(null, android.os.Process.myUserHandle());
+                    for (LauncherActivityInfo info : infoList)
+                        parsePackageXml(info.getComponentName().getPackageName(), info.getComponentName(), shortcutInfoCompats);
+                } else
+                    parsePackageXml(packageName, activity, shortcutInfoCompats);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return shortcutInfoCompats;
+        }
+    }
+
+    private void parsePackageXml(String packageName, ComponentName activity, List<ShortcutInfoCompat> shortcutInfoCompats) throws Exception {
+        Resources resourcesForApplication = mContext.getPackageManager().getResourcesForApplication(packageName);
+        AssetManager assets = resourcesForApplication.getAssets();
+        XmlResourceParser parseXml = assets.openXmlResourceParser("AndroidManifest.xml");
+        int eventType;
+        String resource = null;
+        String currActivity = "";
+        String searchActivity = activity.getClassName();
+        List<String> exportedActivities = new ArrayList<>();
+        while ((eventType = parseXml.nextToken()) != XmlPullParser.END_DOCUMENT)
+            if (eventType == XmlPullParser.START_TAG) {
+                if (parseXml.getName().equals("activity")|| parseXml.getName().equals("activity-alias")) {
+                    boolean exported = false;
+                    for (int i = 0; i < parseXml.getAttributeCount(); i++) {
+                        String attributeName = parseXml.getAttributeName(i);
+                        if (attributeName.equals("name"))
+                            currActivity = parseXml.getAttributeValue(i);
+                        else if (attributeName.equals("exported"))
+                            exported = parseXml.getAttributeValue(i).toLowerCase().equals("true");
+                    }
+                    if (exported)
+                        exportedActivities.add(currActivity);
+                } else if (parseXml.getName().equals("meta-data") && currActivity.equals(searchActivity)) {
+                    boolean found = false;
+                    String tempResource = null;
+                    for (int i = 0; i < parseXml.getAttributeCount(); i++)
+                        if (parseXml.getAttributeName(i).equals("name") && parseXml.getAttributeValue(i).equals("android.app.shortcuts"))
+                            found = true;
+                        else if (parseXml.getAttributeName(i).equals("resource"))
+                            tempResource = parseXml.getAttributeValue(i);
+
+                    if (found && tempResource != null)
+                        resource = tempResource;
+                }
+            }
+
+        if (resource != null) {
+            parseXml = resourcesForApplication.getXml(Integer.parseInt(resource.substring(1)));
+            while ((eventType = parseXml.nextToken()) != XmlPullParser.END_DOCUMENT)
+                if (eventType == XmlPullParser.START_TAG && parseXml.getName().equals("shortcut")) {
+                    ShortcutInfoBackport info = new ShortcutInfoBackport(mContext, resourcesForApplication, packageName, activity, parseXml);
+                    String shortcutActivity = info.getRealActivity().getClassName();
+                    for (String s : exportedActivities)
+                        if (shortcutActivity.equals(s)) {
+                            shortcutInfoCompats.add(info);
+                            break;
+                        }
+                }
         }
     }
 
@@ -240,7 +316,8 @@ public class DeepShortcutManager {
             } catch (SecurityException|IllegalStateException e) {
                 Log.e(TAG, "Failed to make shortcut manager call", e);
             }
-        }
+        } else
+            return true;
         return false;
     }
 }

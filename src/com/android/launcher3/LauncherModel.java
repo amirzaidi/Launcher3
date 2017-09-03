@@ -1057,7 +1057,8 @@ public class LauncherModel extends BroadcastReceiver
                                     } else {
                                         // Create a shortcut info in disabled mode for now.
                                         info = c.loadSimpleShortcut();
-                                        info.isDisabled |= ShortcutInfo.FLAG_DISABLED_LOCKED_USER;
+                                        if (Utilities.ATLEAST_NOUGAT_MR1)
+                                            info.isDisabled |= ShortcutInfo.FLAG_DISABLED_LOCKED_USER;
                                     }
                                 } else { // item type == ITEM_TYPE_SHORTCUT
                                     info = c.loadSimpleShortcut();
