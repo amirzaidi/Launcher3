@@ -51,7 +51,7 @@
     <color name="icon_background">#ff4285f4</color>
 
     <!-- Pixel -->
-    <color name="colorPrimary">#fff5f5f5</color>
+    <color name="colorPrimary">#fff2f2f2</color>
     <color name="colorPrimaryDark">#ffe0e0e0</color>
     <color name="colorSecondary">#ffeeeeee</color>
     <color name="colorAccent">#ff4285f4</color>
