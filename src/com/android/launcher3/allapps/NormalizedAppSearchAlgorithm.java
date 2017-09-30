@@ -1,5 +1,7 @@
 package com.android.launcher3.allapps;
 
+import android.support.annotation.NonNull;
+
 import com.android.launcher3.AppInfo;
 import com.android.launcher3.util.ComponentKey;
 
@@ -20,18 +22,16 @@ public class NormalizedAppSearchAlgorithm extends DefaultAppSearchAlgorithm {
 		super(apps);
 
 		unicodeComplementaryGlyphs = Pattern.compile("\\p{M}");
+
 	}
 
 	@Override
 	protected ArrayList<ComponentKey> getTitleMatchResult(String query) {
 		// Do an intersection of the words in the query and each title, and filter out all the
 		// apps that don't match all of the words in the query.
-		final String queryTextLower = query.toLowerCase();
 
 		// Normalize the query before matching begins
-		final String queryTextNormalized = unicodeComplementaryGlyphs.matcher(
-				Normalizer.normalize(queryTextLower, Normalizer.Form.NFKD)
-		).replaceAll("");
+		final String queryTextNormalized = normalizeStringForSearch(query.toLowerCase());
 
 		final ArrayList<ComponentKey> result = new ArrayList<>();
 		for (AppInfo info : mApps) {
@@ -53,7 +53,7 @@ public class NormalizedAppSearchAlgorithm extends DefaultAppSearchAlgorithm {
 			return false;
 		}
 
-		final String normalizedTitle = Normalizer.normalize(title, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+		final String normalizedTitle = normalizeStringForSearch(title);
 
 		int lastType;
 		int thisType = Character.UNASSIGNED;
@@ -71,5 +71,18 @@ public class NormalizedAppSearchAlgorithm extends DefaultAppSearchAlgorithm {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Provides consistent normalization for both queries and component names for filtering
+	 * @param stringToNormalize
+	 * @return Normalized string for use with {@link NormalizedAppSearchAlgorithm} methods
+	 */
+	protected String normalizeStringForSearch(@NonNull String stringToNormalize) {
+
+		final String normalizedString = Normalizer.normalize(stringToNormalize, Normalizer.Form.NFKD);
+
+		return unicodeComplementaryGlyphs.matcher(normalizedString).replaceAll("");
+
 	}
 }
