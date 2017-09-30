@@ -84,9 +84,9 @@ import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.LauncherSettings.Favorites;
 import com.android.launcher3.accessibility.LauncherAccessibilityDelegate;
 import com.android.launcher3.allapps.AllAppsContainerView;
-import com.android.launcher3.allapps.PredictiveAppsProvider;
 import com.android.launcher3.allapps.AllAppsTransitionController;
-import com.android.launcher3.allapps.DefaultAppSearchController;
+import com.android.launcher3.allapps.NormalizedAppSearchController;
+import com.android.launcher3.allapps.PredictiveAppsProvider;
 import com.android.launcher3.anim.AnimationLayerSet;
 import com.android.launcher3.compat.AppWidgetManagerCompat;
 import com.android.launcher3.compat.LauncherAppsCompat;
@@ -1355,7 +1355,7 @@ public class Launcher extends BaseActivity
         if (mLauncherCallbacks != null && mLauncherCallbacks.getAllAppsSearchBarController() != null) {
             mAppsView.setSearchBarController(mLauncherCallbacks.getAllAppsSearchBarController());
         } else {
-            mAppsView.setSearchBarController(new DefaultAppSearchController());
+            mAppsView.setSearchBarController(new NormalizedAppSearchController());
         }
 
         // Setup the drag controller (drop targets have to be added in reverse order in priority)
