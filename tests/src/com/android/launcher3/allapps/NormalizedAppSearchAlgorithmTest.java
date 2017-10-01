@@ -68,12 +68,18 @@ public class NormalizedAppSearchAlgorithmTest extends InstrumentationTestCase {
 		String normalizedQuery = mAlgorithm.normalizeStringForSearch("Play Mús");
 
 		assertTrue(mAlgorithm.matches(getInfo("Play Música"), normalizedQuery));
-		assertTrue(mAlgorithm.matches(getInfo("Play Musica"), normalizedQuery));
+
+		normalizedQuery = mAlgorithm.normalizeStringForSearch("Play Mus");
+
+		assertTrue(mAlgorithm.matches(getInfo("Play Música"), normalizedQuery));
 
 		normalizedQuery = mAlgorithm.normalizeStringForSearch("Cinép");
 
 		assertTrue(mAlgorithm.matches(getInfo("Cinépolis"), normalizedQuery));
-		assertTrue(mAlgorithm.matches(getInfo("Cinepolis"), normalizedQuery));
+
+		normalizedQuery = mAlgorithm.normalizeStringForSearch("Cinep");
+
+		assertTrue(mAlgorithm.matches(getInfo("Cinépolis"), normalizedQuery));
 
 	}
 

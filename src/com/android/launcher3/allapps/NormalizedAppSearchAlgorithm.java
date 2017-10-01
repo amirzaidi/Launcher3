@@ -47,13 +47,14 @@ public class NormalizedAppSearchAlgorithm extends DefaultAppSearchAlgorithm {
 		int queryLength = query.length();
 
 		String title = info.title.toString();
-		int titleLength = title.length();
+
+		final String normalizedTitle = normalizeStringForSearch(title);
+
+		int titleLength = normalizedTitle.length();
 
 		if (titleLength < queryLength || queryLength <= 0) {
 			return false;
 		}
-
-		final String normalizedTitle = normalizeStringForSearch(title);
 
 		int lastType;
 		int thisType = Character.UNASSIGNED;
