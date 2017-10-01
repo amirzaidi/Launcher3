@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class DefaultAppSearchAlgorithm {
 
-    private final List<AppInfo> mApps;
+    protected final List<AppInfo> mApps;
     protected final Handler mResultHandler;
 
     public DefaultAppSearchAlgorithm(List<AppInfo> apps) {
