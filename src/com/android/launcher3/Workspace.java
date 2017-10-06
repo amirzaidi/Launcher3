@@ -101,6 +101,10 @@ public class Workspace extends PagedView
         implements DropTarget, DragSource, View.OnTouchListener,
         DragController.DragListener, ViewGroup.OnHierarchyChangeListener,
         Insettable, DropTargetSource {
+
+    // tGL Vars
+    private static long EVENT_START = 0;
+
     private static final String TAG = "Launcher.Workspace";
 
     /** The value that {@link #mTransitionProgress} must be greater than for
@@ -1220,6 +1224,11 @@ public class Workspace extends PagedView
             break;
         case MotionEvent.ACTION_POINTER_UP:
         case MotionEvent.ACTION_UP:
+            if (ev.getEventTime()-EVENT_START < 200) {
+                Log.i("DOUBLE_TAP", ev.getEventTime()-EVENT_START+"");
+                new LockScreen(getContext());
+            }
+            EVENT_START = ev.getEventTime();
             if (mTouchState == TOUCH_STATE_REST) {
                 final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage);
                 if (currentPage != null) {
