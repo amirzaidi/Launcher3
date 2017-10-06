@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -17,15 +16,21 @@
 ** limitations under the License.
 */
 -->
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.launcher3">
-    <uses-sdk android:targetSdkVersion="26" android:minSdkVersion="21"/>
-    <uses-feature android:glEsVersion="0x00020000" android:required="false"/>
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="26" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="false" />
     <!--
     Manifest entries specific to Launcher3. This is merged with AndroidManifest-common.xml.
     Refer comments around specific entries on how to extend individual components.
     -->
+
 
     <!--
     Permissions required for read/write access to the workspace data. These permission name
@@ -34,41 +39,46 @@
     -->
     <permission
         android:name="com.google.android.apps.nexuslauncher.permission.READ_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="normal"
+        android:description="@string/permdesc_read_settings"
         android:label="@string/permlab_read_settings"
-        android:description="@string/permdesc_read_settings"/>
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="normal" />
     <permission
         android:name="com.google.android.apps.nexuslauncher.permission.WRITE_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="signatureOrSystem"
+        android:description="@string/permdesc_write_settings"
         android:label="@string/permlab_write_settings"
-        android:description="@string/permdesc_write_settings"/>
-    <permission android:name="com.google.android.apps.nexuslauncher.permission.QSB"
-        android:protectionLevel="normal"
-        android:label="QSB" />
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="signatureOrSystem" />
+    <permission
+        android:name="com.google.android.apps.nexuslauncher.permission.QSB"
+        android:label="QSB"
+        android:protectionLevel="normal" />
 
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.google.android.apps.nexuslauncher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.google.android.apps.nexuslauncher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.google.android.apps.nexuslauncher.permission.QSB" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:backupAgent="com.android.launcher3.LauncherBackupAgent"
-        android:fullBackupOnly="true"
+        android:backupAgent=".LauncherBackupAgent"
         android:fullBackupContent="@xml/backupscheme"
+        android:fullBackupOnly="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher_home"
         android:label="@string/derived_app_name"
-        android:theme="@style/LauncherTheme"
         android:largeHeap="@bool/config_largeHeap"
         android:restoreAnyVersion="true"
-        android:supportsRtl="true" >
-
-        <receiver android:name="com.android.launcher3.pixel.WeatherUpdateReceiver" android:permission="android.permission.CAPTURE_AUDIO_HOTWORD">
+        android:supportsRtl="true"
+        android:theme="@style/LauncherTheme">
+        <receiver
+            android:name=".pixel.WeatherUpdateReceiver"
+            android:permission="android.permission.CAPTURE_AUDIO_HOTWORD">
             <intent-filter>
-                <action android:name="com.google.android.apps.nexuslauncher.updateweather"/>
+                <action android:name="com.google.android.apps.nexuslauncher.updateweather" />
             </intent-filter>
         </receiver>
 
@@ -77,35 +87,35 @@
         attributes and intent filters the same
         -->
         <activity
-            android:name="com.android.launcher3.Launcher"
-            android:launchMode="singleTask"
+            android:name=".Launcher"
             android:clearTaskOnLaunch="true"
-            android:stateNotNeeded="true"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:screenOrientation="nosensor"
             android:configChanges="keyboard|keyboardHidden|navigation"
+            android:enabled="true"
+            android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:resumeWhilePausing="true"
+            android:screenOrientation="nosensor"
+            android:stateNotNeeded="true"
             android:taskAffinity=""
-            android:enabled="true">
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY"/>
+                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
         </activity>
 
-        <!--
-        The settings activity. When extending keep the intent filter present
-        -->
+        <!-- The settings activity. When extending keep the intent filter present -->
         <activity
-            android:name="com.android.launcher3.SettingsActivity"
+            android:name=".SettingsActivity"
+            android:autoRemoveFromRecents="true"
             android:label="@string/settings_button_text"
-            android:theme="@style/SettingsTheme"
-            android:autoRemoveFromRecents="true">
+            android:theme="@style/SettingsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -116,13 +126,14 @@
         represent the package name.
         -->
         <provider
-            android:name="com.android.launcher3.LauncherProvider"
+            android:name=".LauncherProvider"
             android:authorities="com.google.android.apps.nexuslauncher.settings"
             android:exported="true"
-            android:writePermission="com.google.android.apps.nexuslauncher.permission.WRITE_SETTINGS"
-            android:readPermission="com.google.android.apps.nexuslauncher.permission.READ_SETTINGS" />
+            android:readPermission="com.google.android.apps.nexuslauncher.permission.READ_SETTINGS"
+            android:writePermission="com.google.android.apps.nexuslauncher.permission.WRITE_SETTINGS" />
 
-        <!-- ENABLE_FOR_TESTING
+        <!--
+        ENABLE_FOR_TESTING
 
         <activity
             android:name="com.android.launcher3.testing.LauncherExtension"
@@ -167,8 +178,18 @@
         </activity>
 
         <service android:name="com.android.launcher3.testing.MemoryTracker" />
-
         -->
-
+        <receiver
+            android:name=".LockScreen"
+            android:label="Double Tap Screen Lock"
+            android:description="@string/lock_description"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin"
+                android:resource="@xml/admin_policies" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
     </application>
+
 </manifest>
