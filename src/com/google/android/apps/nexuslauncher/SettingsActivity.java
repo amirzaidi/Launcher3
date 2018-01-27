@@ -6,12 +6,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -21,6 +21,9 @@ import android.preference.PreferenceFragment;
 import android.preference.TwoStatePreference;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
@@ -29,12 +32,13 @@ import com.android.launcher3.Utilities;
 import com.android.launcher3.util.LooperExecutor;
 import com.google.android.apps.nexuslauncher.smartspace.SmartspaceController;
 
+import com.google.android.apps.nexuslauncher.AboutDialog;
+
 public class SettingsActivity extends com.android.launcher3.SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
     public final static String ICON_PACK_PREF = "pref_icon_pack";
     public final static String SHOW_PREDICTIONS_PREF = "pref_show_predictions";
     public final static String ENABLE_MINUS_ONE_PREF = "pref_enable_minus_one";
     public final static String SMARTSPACE_PREF = "pref_smartspace";
-    public final static String APP_VERSION_PREF = "about_app_version";
 
     @Override
     protected void onCreate(final Bundle bundle) {
@@ -69,23 +73,18 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
             findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
             findPreference(ENABLE_MINUS_ONE_PREF).setTitle(getDisplayGoogleTitle());
 
-            PackageManager packageManager = mContext.getPackageManager();
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
-                findPreference(APP_VERSION_PREF).setSummary(packageInfo.versionName);
-                if (SmartspaceController.get(mContext).cY()) {
-                    findPreference(SMARTSPACE_PREF).setOnPreferenceClickListener(this);
-                } else {
-                    getPreferenceScreen().removePreference(findPreference("pref_smartspace"));
-                }
-            } catch (PackageManager.NameNotFoundException ex) {
-                Log.e("SettingsActivity", "Unable to load my own package info", ex);
+            if (SmartspaceController.get(mContext).cY()) {
+                findPreference(SMARTSPACE_PREF).setOnPreferenceClickListener(this);
+            } else {
+                getPreferenceScreen().removePreference(findPreference("pref_smartspace"));
             }
 
             mIconPackPref = (CustomIconPreference) findPreference(ICON_PACK_PREF);
             mIconPackPref.setOnPreferenceChangeListener(this);
 
             findPreference(SHOW_PREDICTIONS_PREF).setOnPreferenceChangeListener(this);
+
+            setHasOptionsMenu(true);
         }
 
         private String getDisplayGoogleTitle() {
@@ -109,6 +108,25 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
         public void onResume() {
             super.onResume();
             mIconPackPref.reloadIconPacks();
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            menu.add(0, 0, 0, R.string.about_credits)
+                    .setIcon(R.drawable.ic_dialog_alert)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case 0:
+                    final AboutDialog dialog = new AboutDialog();
+                    showAboutDialog(this, dialog);
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         @Override
@@ -191,5 +209,15 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                     .setNegativeButton(android.R.string.cancel, null)
                     .setPositiveButton(R.string.label_turn_off_suggestions, this).create();
         }
+    }
+
+    public static void showAboutDialog(Fragment context, DialogFragment dialog) {
+        FragmentTransaction ft = context.getChildFragmentManager().beginTransaction();
+        Fragment prev = context.getChildFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        dialog.show(ft, "dialog");
     }
 }
