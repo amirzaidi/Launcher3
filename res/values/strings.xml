@@ -338,4 +338,11 @@
     <string name="title_disable_suggestions_prompt">Turn off app suggestions?</string>
     <string name="msg_disable_suggestions_prompt">"Suggestions won't appear at the top of your apps list, and the usage data used to create them will be permanently erased."</string>
     <string name="label_turn_off_suggestions">TURN OFF</string>
+
+    <!-- About -->
+    <string name="about_credits">Credits</string>
+    <string name="about_credits_ok">OK</string>
+    <string name="about_amirzaidi_title">Amir Zaidi</string>
+    <string name="about_amirzaidi_summary">Reverse engineered pixel launcher features onto Launcher 3</string>
+    <string name="about_amirzaidi_url">https://github.com/amirzaidi</string>
 </resources>

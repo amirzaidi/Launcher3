@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp">
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="78dp"
+        android:layout_height="89dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="70dp"
+        android:src="@drawable/amirzaidi" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/imageView1"
+        android:layout_marginTop="22dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="@string/about_credits" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="16sp"
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="131dp"
+        android:text="@string/about_amirzaidi_title" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:text="@string/about_amirzaidi_summary" />
+
+    <Button
+        android:id="@+id/button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/textView3"
+        android:textColor="@color/colorAccent"
+        android:background="@android:color/transparent"
+        android:text="@string/about_credits_ok" />
+</RelativeLayout>
