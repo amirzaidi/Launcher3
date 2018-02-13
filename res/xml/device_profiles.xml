@@ -85,7 +85,7 @@
 
     <profile
         launcher:name="Low DPI"
-        launcher:minWidthDps="498"
+        launcher:minWidthDps="525"
         launcher:minHeightDps="750"
         launcher:numRows="6"
         launcher:numColumns="6"
