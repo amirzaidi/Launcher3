@@ -36,15 +36,28 @@ public class CustomAppFilter extends NexusAppFilter {
         editor.apply();
     }
 
-    static void hideComponentName(Context context, String comp) {
+    static void setComponentNameState(Context context, String comp, boolean shown) {
         Set<String> hiddenApps = getHiddenApps(context);
-        hiddenApps.add(comp);
-        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
-        editor.putStringSet(HIDE_APPS_PREF, hiddenApps);
-        editor.apply();
+        while (hiddenApps.contains(comp)) {
+            hiddenApps.remove(comp);
+        }
+        if (!shown) {
+            hiddenApps.add(comp);
+        }
+        setHiddenApps(context, hiddenApps);
     }
 
     private static Set<String> getHiddenApps(Context context) {
         return new HashSet<>(Utilities.getPrefs(context).getStringSet(HIDE_APPS_PREF, new HashSet<String>()));
+    }
+
+    static boolean isHiddenApp(Context context, String comp) {
+        return getHiddenApps(context).contains(comp);
+    }
+
+    private static void setHiddenApps(Context context, Set<String> hiddenApps) {
+        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
+        editor.putStringSet(HIDE_APPS_PREF, hiddenApps);
+        editor.apply();
     }
 }

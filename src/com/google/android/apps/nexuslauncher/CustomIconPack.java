@@ -16,37 +16,36 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CustomIconPackParser {
+public class CustomIconPack {
     public final static String DISABLE_PACK_PREF = "all_apps_disable_pack";
 
     static void clearDisabledApps(Context context) {
-        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
-        editor.putStringSet(DISABLE_PACK_PREF, new HashSet<String>());
-        editor.apply();
+        setDisabledApps(context, new HashSet<String>());
     }
 
-    static boolean enabledIconPack(Context context, String comp) {
+    static boolean isEnabledForApp(Context context, String comp) {
         return !getDisabledApps(context).contains(comp);
     }
 
-    static void enableIconPack(Context context, String comp) {
-        Set<String> hiddenApps = getDisabledApps(context);
-        hiddenApps.remove(comp);
-        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
-        editor.putStringSet(DISABLE_PACK_PREF, hiddenApps);
-        editor.apply();
-    }
-
-    static void disableIconPack(Context context, String comp) {
-        Set<String> hiddenApps = getDisabledApps(context);
-        hiddenApps.add(comp);
-        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
-        editor.putStringSet(DISABLE_PACK_PREF, hiddenApps);
-        editor.apply();
+    static void setAppState(Context context, String comp, boolean enabled) {
+        Set<String> disabledApps = getDisabledApps(context);
+        while (disabledApps.contains(comp)) {
+            disabledApps.remove(comp);
+        }
+        if (!enabled) {
+            disabledApps.add(comp);
+        }
+        setDisabledApps(context, disabledApps);
     }
 
     private static Set<String> getDisabledApps(Context context) {
         return new HashSet<>(Utilities.getPrefs(context).getStringSet(DISABLE_PACK_PREF, new HashSet<String>()));
+    }
+
+    private static void setDisabledApps(Context context, Set<String> disabledApps) {
+        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
+        editor.putStringSet(DISABLE_PACK_PREF, disabledApps);
+        editor.apply();
     }
 
     static void parse(Map<String, Integer> packComponents, Map<String, String> packCalendars, PackageManager pm, String iconPack) {

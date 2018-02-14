@@ -89,7 +89,7 @@ public class CustomIconProvider extends DynamicIconProvider {
         String packageName = launcherActivityInfo.getApplicationInfo().packageName;
         String component = launcherActivityInfo.getComponentName().toString();
         Drawable drawable = null;
-        if (CustomIconPackParser.enabledIconPack(mContext, component)) {
+        if (CustomIconPack.isEnabledForApp(mContext, component)) {
             PackageManager pm = mContext.getPackageManager();
             if (mFactory.packCalendars.containsKey(component)) {
                 try {

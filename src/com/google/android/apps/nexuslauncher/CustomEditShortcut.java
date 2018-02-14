@@ -14,6 +14,7 @@ import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.popup.SystemShortcut;
+import com.android.launcher3.widget.WidgetsBottomSheet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,19 @@ public class CustomEditShortcut extends SystemShortcut {
             CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(launcher);
             factory.ensureInitialLoadComplete();
 
-            final Resources res = launcher.getResources();
             final String comp = itemInfo.getTargetComponent().toString();
+            if (factory.packCalendars.containsKey(comp) || factory.packComponents.containsKey(comp) || itemInfo.container == ItemInfo.NO_ID) {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AbstractFloatingView.closeAllOpenViews(launcher);
+                        CustomBottomSheet sheet = (CustomBottomSheet) launcher.getLayoutInflater().inflate(R.layout.app_edit_bottom_sheet, launcher.getDragLayer(), false);
+                        sheet.populateAndShow(itemInfo);
+                    }
+                };
+            }
+
+            /*final Resources res = launcher.getResources();
             final List<EditSelection> values = new ArrayList<>();
 
             values.add(EditSelection.DisablePack);
@@ -49,37 +61,22 @@ public class CustomEditShortcut extends SystemShortcut {
                 values.add(EditSelection.HideApp);
             }
             if (values.size() > 1) {
-                CharSequence[] titles = new CharSequence[values.size()];
-                for (int i = 0; i < values.size(); i++) {
-                    switch (values.get(i)) {
-                        case DisablePack:
-                            titles[i] = res.getString(R.string.icon_shape_system_default);
-                            break;
-                        case EnablePack:
-                            titles[i] = res.getString(R.string.pref_icon_pack);
-                            break;
-                        case HideApp:
-                            titles[i] = res.getString(R.string.hide_app_sum);
-                            break;
-                    }
-                }
-
                 final String pkg = itemInfo.getTargetComponent().getPackageName();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(launcher);
                 builder.setSingleChoiceItems(titles,
-                        values.contains(EditSelection.EnablePack) && CustomIconPackParser.enabledIconPack(launcher, comp) ? 1 : 0,
+                        values.contains(EditSelection.EnablePack) && CustomIconPack.isEnabledForApp(launcher, comp) ? 1 : 0,
                         new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         switch (values.get(item)) {
                             case DisablePack:
                                 if (values.contains(EditSelection.EnablePack)) {
-                                    CustomIconPackParser.disableIconPack(launcher, comp);
+                                    CustomIconPack.disableForApp(launcher, comp);
                                     CustomIconUtils.reloadIcons(launcher, pkg);
                                 }
                                 break;
                             case EnablePack:
-                                CustomIconPackParser.enableIconPack(launcher, comp);
+                                CustomIconPack.enableForApp(launcher, comp);
                                 CustomIconUtils.reloadIcons(launcher, pkg);
                                 break;
                             case HideApp:
@@ -106,7 +103,7 @@ public class CustomEditShortcut extends SystemShortcut {
                         picker.show();
                     }
                 };
-            }
+            }*/
         }
 
         return null;

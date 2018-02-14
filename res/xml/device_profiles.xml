@@ -34,6 +34,22 @@
         />
 
     <profile
+        launcher:name="Pixel (4 rows)"
+        launcher:minWidthDps="297"
+        launcher:minHeightDps="496"
+        launcher:numRows="4"
+        launcher:numColumns="5"
+        launcher:numFolderRows="4"
+        launcher:numFolderColumns="4"
+        launcher:minAllAppsPredictionColumns="4"
+        launcher:numHotseatIcons="5"
+        launcher:iconSize="56"
+        launcher:landscapeIconSize="54"
+        launcher:iconTextSize="13.0"
+        launcher:defaultLayoutId="@xml/default_workspace_5x5"
+        />
+
+    <profile
         launcher:name="Pixel"
         launcher:minWidthDps="387"
         launcher:minHeightDps="659"

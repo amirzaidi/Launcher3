@@ -16,10 +16,7 @@ import android.preference.TwoStatePreference;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.launcher3.Launcher;
-import com.android.launcher3.LauncherModel;
 import com.android.launcher3.R;
-import com.android.launcher3.util.LooperExecutor;
 import com.google.android.apps.nexuslauncher.smartspace.SmartspaceController;
 
 public class SettingsActivity extends com.android.launcher3.SettingsActivity implements PreferenceFragment.OnPreferenceStartFragmentCallback {
@@ -112,7 +109,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                         if (((String) newValue).isEmpty()) {
                             CustomAppFilter.emptyAppFilter(mContext);
                         }
-                        CustomIconPackParser.clearDisabledApps(mContext);
+                        CustomIconPack.clearDisabledApps(mContext);
                         CustomIconUtils.applyIconPackAsync(mContext);
                     }
                     return true;

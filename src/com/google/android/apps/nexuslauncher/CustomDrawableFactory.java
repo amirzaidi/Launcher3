@@ -70,7 +70,7 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
         packComponents.clear();
         packCalendars.clear();
         if (CustomIconUtils.isPackProvider(mContext, iconPack)) {
-            CustomIconPackParser.parse(packComponents, packCalendars, mContext.getPackageManager(), iconPack);
+            CustomIconPack.parse(packComponents, packCalendars, mContext.getPackageManager(), iconPack);
         }
     }
 
@@ -86,7 +86,7 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
     public FastBitmapDrawable newIcon(Bitmap icon, ItemInfo info) {
         ensureInitialLoadComplete();
         String clockComp = DynamicClock.DESK_CLOCK.toString();
-        if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString()) && CustomIconPackParser.enabledIconPack(mContext, clockComp)) {
+        if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString()) && CustomIconPack.isEnabledForApp(mContext, clockComp)) {
             return new FastBitmapDrawable(icon);
         }
         return super.newIcon(icon, info);
