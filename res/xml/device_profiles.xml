@@ -35,7 +35,7 @@
 
     <profile
         launcher:name="Pixel (4 rows)"
-        launcher:minWidthDps="297"
+        launcher:minWidthDps="314"
         launcher:minHeightDps="496"
         launcher:numRows="4"
         launcher:numColumns="5"
