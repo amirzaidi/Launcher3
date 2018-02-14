@@ -22,7 +22,6 @@ import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
-import com.android.launcher3.shortcuts.ShortcutInfoCompat;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,7 +29,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,8 +53,10 @@ public class CustomIconProvider extends DynamicIconProvider {
                     }
                     mDateOfMonth = dateOfMonth;
                 }
+                LauncherAppsCompat apps = LauncherAppsCompat.getInstance(mContext);
+                LauncherModel model = LauncherAppState.getInstance(context).getModel();
+                DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
                 for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-                    LauncherAppsCompat apps = LauncherAppsCompat.getInstance(mContext);
                     Set<String> packages = new HashSet<>();
                     for (Map.Entry<String, String> calendars : mFactory.packCalendars.entrySet()) {
                         ComponentName componentName = ComponentName.unflattenFromString(calendars.getKey().substring(14, calendars.getKey().length() - 1));
@@ -67,13 +67,8 @@ public class CustomIconProvider extends DynamicIconProvider {
                             }
                         }
                     }
-                    LauncherModel model = LauncherAppState.getInstance(context).getModel();
                     for (String pkg : packages) {
-                        model.onPackageChanged(pkg, user);
-                        List<ShortcutInfoCompat> shortcuts = DeepShortcutManager.getInstance(context).queryForPinnedShortcuts(pkg, user);
-                        if (!shortcuts.isEmpty()) {
-                            model.updatePinnedShortcuts(pkg, shortcuts, user);
-                        }
+                        CustomIconUtils.reloadIcon(shortcutManager, model, user, pkg);
                     }
                 }
             }
@@ -89,7 +84,7 @@ public class CustomIconProvider extends DynamicIconProvider {
 
     @Override
     public Drawable getIcon(LauncherActivityInfo launcherActivityInfo, int iconDpi, boolean flattenDrawable) {
-        mFactory.ensureIconPackCached();
+        mFactory.ensureInitialLoadComplete();
 
         String packageName = launcherActivityInfo.getApplicationInfo().packageName;
         String component = launcherActivityInfo.getComponentName().toString();

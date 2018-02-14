@@ -35,7 +35,7 @@ public class CustomEditShortcut extends SystemShortcut {
     public View.OnClickListener getOnClickListener(final Launcher launcher, final ItemInfo itemInfo) {
         if (CustomIconUtils.isPackProvider(launcher, CustomIconUtils.getCurrentPack(launcher))) {
             CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(launcher);
-            factory.ensureIconPackCached();
+            factory.ensureInitialLoadComplete();
 
             final Resources res = launcher.getResources();
             final String comp = itemInfo.getTargetComponent().toString();

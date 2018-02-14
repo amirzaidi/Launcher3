@@ -9,13 +9,15 @@ import android.os.Handler;
 import com.android.launcher3.FastBitmapDrawable;
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherModel;
+import com.android.launcher3.util.LooperExecutor;
 import com.google.android.apps.nexuslauncher.clock.DynamicClock;
 import com.google.android.apps.nexuslauncher.utils.ActionIntentFilter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
-public class CustomDrawableFactory extends DynamicDrawableFactory {
+public class CustomDrawableFactory extends DynamicDrawableFactory implements Runnable {
     private final Context mContext;
     private final BroadcastReceiver mAutoUpdatePack;
     private boolean mRegistered = false;
@@ -23,6 +25,8 @@ public class CustomDrawableFactory extends DynamicDrawableFactory {
     String iconPack;
     final Map<String, Integer> packComponents = new HashMap<>();
     final Map<String, String> packCalendars = new HashMap<>();
+
+    private Semaphore waiter = new Semaphore(0);
 
     public CustomDrawableFactory(Context context) {
         super(context);
@@ -33,14 +37,20 @@ public class CustomDrawableFactory extends DynamicDrawableFactory {
                 if (!CustomIconUtils.isPackProvider(context, CustomIconUtils.getCurrentPack(context))) {
                     CustomIconUtils.setCurrentPack(context, "");
                 }
-                CustomIconUtils.applyIconPack(context);
+                CustomIconUtils.applyIconPackAsync(context);
             }
         };
 
-        reloadIconPackCache();
+        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(this);
     }
 
-    synchronized void reloadIconPackCache() {
+    @Override
+    public void run() {
+        reloadIconPack();
+        waiter.release();
+    }
+
+    void reloadIconPack() {
         iconPack = CustomIconUtils.getCurrentPack(mContext);
 
         if (mRegistered) {
@@ -59,18 +69,22 @@ public class CustomDrawableFactory extends DynamicDrawableFactory {
 
         packComponents.clear();
         packCalendars.clear();
-
         if (CustomIconUtils.isPackProvider(mContext, iconPack)) {
             CustomIconPackParser.parse(packComponents, packCalendars, mContext.getPackageManager(), iconPack);
         }
     }
 
-    synchronized void ensureIconPackCached() {
+    synchronized void ensureInitialLoadComplete() {
+        if (waiter != null) {
+            waiter.acquireUninterruptibly();
+            waiter.release();
+            waiter = null;
+        }
     }
 
     @Override
     public FastBitmapDrawable newIcon(Bitmap icon, ItemInfo info) {
-        ensureIconPackCached();
+        ensureInitialLoadComplete();
         String clockComp = DynamicClock.DESK_CLOCK.toString();
         if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString()) && CustomIconPackParser.enabledIconPack(mContext, clockComp)) {
             return new FastBitmapDrawable(icon);

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.UserHandle;
 
-import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
@@ -17,6 +16,7 @@ import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
 import com.android.launcher3.shortcuts.ShortcutInfoCompat;
+import com.android.launcher3.util.LooperExecutor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,28 +67,31 @@ public class CustomIconUtils {
         edit.apply();
     }
 
-    static void applyIconPack(final Context context) {
-        CustomIconPackParser.clearDisabledApps(context);
-        CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(context);
-        factory.reloadIconPackCache();
+    static void applyIconPackAsync(final Context context) {
+        new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
+            @Override
+            public void run() {
+                ((CustomDrawableFactory) DrawableFactory.get(context)).reloadIconPack();
 
-        LauncherModel model = LauncherAppState.getInstance(context).getModel();
-        DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
+                LauncherModel model = LauncherAppState.getInstance(context).getModel();
+                DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
 
-        String[] packProviders = getPackProviders(context).keySet().toArray(new String[0]);
+                String[] packProviders = getPackProviders(context).keySet().toArray(new String[0]);
 
-        for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-            model.onPackagesUnavailable(packProviders, user, false);
-            model.onPackagesAvailable(packProviders, user, false);
+                for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
+                    model.onPackagesUnavailable(packProviders, user, false);
+                    model.onPackagesAvailable(packProviders, user, false);
 
-            Set<String> packages = new HashSet<>();
-            for (LauncherActivityInfo info : LauncherAppsCompat.getInstance(context).getActivityList(null, user)) {
-                packages.add(info.getApplicationInfo().packageName);
+                    Set<String> packages = new HashSet<>();
+                    for (LauncherActivityInfo info : LauncherAppsCompat.getInstance(context).getActivityList(null, user)) {
+                        packages.add(info.getApplicationInfo().packageName);
+                    }
+                    for (String pkg : packages) {
+                        reloadIcon(shortcutManager, model, user, pkg);
+                    }
+                }
             }
-            for (String pkg : packages) {
-                reloadIcon(shortcutManager, model, user, pkg);
-            }
-        }
+        });
     }
 
     static void reloadIcons(final Context context, String pkg) {

@@ -108,11 +108,13 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
         public boolean onPreferenceChange(Preference preference, final Object newValue) {
             switch (preference.getKey()) {
                 case ICON_PACK_PREF:
-                    if (((String) newValue).isEmpty()) {
-                        CustomAppFilter.emptyAppFilter(mContext);
+                    if (!CustomIconUtils.getCurrentPack(mContext).equals(newValue)) {
+                        if (((String) newValue).isEmpty()) {
+                            CustomAppFilter.emptyAppFilter(mContext);
+                        }
+                        CustomIconPackParser.clearDisabledApps(mContext);
+                        CustomIconUtils.applyIconPackAsync(mContext);
                     }
-                    CustomIconUtils.setCurrentPack(mContext, (String) newValue);
-                    CustomIconUtils.applyIconPack(mContext);
                     return true;
                 case SHOW_PREDICTIONS_PREF:
                     if ((boolean) newValue) {
