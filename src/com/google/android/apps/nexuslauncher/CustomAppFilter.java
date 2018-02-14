@@ -10,23 +10,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CustomAppFilter extends NexusAppFilter {
-    private final Context mContext;
-    private final String mIconPack;
     public final static String HIDE_APPS_PREF = "all_apps_hide";
+    private final Context mContext;
 
     public CustomAppFilter(Context context) {
         super(context);
         mContext = context;
-        mIconPack = CustomIconUtils.getCurrentPack(context);
     }
 
     @Override
     public boolean shouldShowApp(ComponentName componentName) {
-        return super.shouldShowApp(componentName) && !getHiddenApps(mContext).contains(componentName.toString()) && showIconPack(componentName.getPackageName());
+        return super.shouldShowApp(componentName) &&
+                !getHiddenApps(mContext).contains(componentName.toString()) &&
+                showIconPack(componentName.getPackageName());
     }
 
     private boolean showIconPack(String pkg) {
-        return mIconPack.isEmpty() || mIconPack.equals(pkg) || !CustomIconUtils.isPackProvider(mContext, pkg);
+        String iconPack = CustomIconUtils.getCurrentPack(mContext);
+        return iconPack.isEmpty() || iconPack.equals(pkg) || !CustomIconUtils.isPackProvider(mContext, pkg);
     }
 
     static void emptyAppFilter(Context context) {

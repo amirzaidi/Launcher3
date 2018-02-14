@@ -15,7 +15,7 @@ import com.google.android.apps.nexuslauncher.utils.ActionIntentFilter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomDrawableFactory extends DynamicDrawableFactory implements Runnable {
+public class CustomDrawableFactory extends DynamicDrawableFactory {
     private final Context mContext;
     private final BroadcastReceiver mAutoUpdatePack;
     private boolean mRegistered = false;
@@ -23,8 +23,6 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
     String iconPack;
     final Map<String, Integer> packComponents = new HashMap<>();
     final Map<String, String> packCalendars = new HashMap<>();
-
-    private Thread mThread;
 
     public CustomDrawableFactory(Context context) {
         super(context);
@@ -51,10 +49,9 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
         }
         if (!iconPack.isEmpty()) {
             mContext.registerReceiver(mAutoUpdatePack, ActionIntentFilter.newInstance(iconPack,
-                    Intent.ACTION_PACKAGE_ADDED,
                     Intent.ACTION_PACKAGE_CHANGED,
                     Intent.ACTION_PACKAGE_REPLACED,
-                    Intent.ACTION_PACKAGE_REMOVED),
+                    Intent.ACTION_PACKAGE_FULLY_REMOVED),
                     null,
                     new Handler(LauncherModel.getWorkerLooper()));
             mRegistered = true;
@@ -63,32 +60,19 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
         packComponents.clear();
         packCalendars.clear();
 
-        mThread = new Thread(this);
-        mThread.start();
-    }
-
-    synchronized void ensureIconPackCached() {
-        if (mThread != null) {
-            try {
-                mThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            mThread = null;
-        }
-    }
-
-    @Override
-    public void run() {
         if (CustomIconUtils.isPackProvider(mContext, iconPack)) {
             CustomIconPackParser.parse(packComponents, packCalendars, mContext.getPackageManager(), iconPack);
         }
     }
 
+    synchronized void ensureIconPackCached() {
+    }
+
     @Override
     public FastBitmapDrawable newIcon(Bitmap icon, ItemInfo info) {
         ensureIconPackCached();
-        if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString())) {
+        String clockComp = DynamicClock.DESK_CLOCK.toString();
+        if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString()) && CustomIconPackParser.enabledIconPack(mContext, clockComp)) {
             return new FastBitmapDrawable(icon);
         }
         return super.newIcon(icon, info);

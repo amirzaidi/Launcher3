@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.UserHandle;
 
+import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
@@ -68,12 +69,18 @@ public class CustomIconUtils {
 
     static void applyIconPack(final Context context) {
         CustomIconPackParser.clearDisabledApps(context);
-        ((CustomDrawableFactory) DrawableFactory.get(context)).reloadIconPackCache();
+        CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(context);
+        factory.reloadIconPackCache();
 
         LauncherModel model = LauncherAppState.getInstance(context).getModel();
         DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
 
+        String[] packProviders = getPackProviders(context).keySet().toArray(new String[0]);
+
         for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
+            model.onPackagesUnavailable(packProviders, user, false);
+            model.onPackagesAvailable(packProviders, user, false);
+
             Set<String> packages = new HashSet<>();
             for (LauncherActivityInfo info : LauncherAppsCompat.getInstance(context).getActivityList(null, user)) {
                 packages.add(info.getApplicationInfo().packageName);

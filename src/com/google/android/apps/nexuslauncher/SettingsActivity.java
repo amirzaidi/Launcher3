@@ -16,6 +16,7 @@ import android.preference.TwoStatePreference;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.R;
 import com.android.launcher3.util.LooperExecutor;
@@ -110,12 +111,8 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                     if (((String) newValue).isEmpty()) {
                         CustomAppFilter.emptyAppFilter(mContext);
                     }
-                    new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            CustomIconUtils.applyIconPack(mContext);
-                        }
-                    });
+                    CustomIconUtils.setCurrentPack(mContext, (String) newValue);
+                    CustomIconUtils.applyIconPack(mContext);
                     return true;
                 case SHOW_PREDICTIONS_PREF:
                     if ((boolean) newValue) {
