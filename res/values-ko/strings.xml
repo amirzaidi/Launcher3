@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">사용 중지</string>
     <string name="action_edit">편집</string>
   <string name="hide_app_sum">앱 서랍에서 앱 숨기기</string>
+  <string name="hide_app">앱 숨기기</string>
 </resources>

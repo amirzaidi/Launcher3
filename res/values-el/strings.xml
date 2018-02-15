@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ</string>
     <string name="action_edit">Επεξεργασία</string>
   <string name="hide_app_sum">Απόκρυψη εφαρμογών από το συρτάρι εφαρμογών</string>
+  <string name="hide_app">Κρυφές εφαρμογές</string>
 </resources>

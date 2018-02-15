@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">DESACTIVA</string>
     <string name="action_edit">Edita</string>
   <string name="hide_app_sum">Amaga l\'aplicació del calaix</string>
+  <string name="hide_app">Amaga l\'aplicació</string>
 </resources>

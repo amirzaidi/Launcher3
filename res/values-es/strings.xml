@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">DESACTIVAR</string>
     <string name="action_edit">Editar</string>
   <string name="hide_app_sum">Ocultar aplicación del cajón de aplicaciones</string>
+  <string name="hide_app">Ocultar aplicación</string>
 </resources>

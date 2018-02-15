@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">VYPNOUT</string>
     <string name="action_edit">Upravit</string>
   <string name="hide_app_sum">Skrýt aplikaci v seznamu aplikací</string>
+  <string name="hide_app">Skrýt aplikaci</string>
 </resources>

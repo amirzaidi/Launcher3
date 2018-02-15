@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">ОТКЛЮЧИТЬ</string>
     <string name="action_edit">Редактировать</string>
   <string name="hide_app_sum">Скрыть приложение из меню</string>
+  <string name="hide_app">Скрыть приложение</string>
 </resources>

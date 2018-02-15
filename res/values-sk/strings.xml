@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">VYPNÚŤ</string>
     <string name="action_edit">Upraviť</string>
   <string name="hide_app_sum">Skryť aplikáciu zo zoznamu aplikácií</string>
+  <string name="hide_app">Skryť aplikáciu</string>
 </resources>

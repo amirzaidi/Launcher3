@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">DÉSACTIVER</string>
     <string name="action_edit">Modifier</string>
   <string name="hide_app_sum">Masquer l\'application de la liste des applications</string>
+  <string name="hide_app">Masquer app</string>
 </resources>

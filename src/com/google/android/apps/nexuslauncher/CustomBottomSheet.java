@@ -19,6 +19,7 @@ package com.google.android.apps.nexuslauncher;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.preference.Preference;
@@ -92,8 +93,17 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
 
             CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(getContext());
 
-            mPrefPack.setEnabled(factory.packCalendars.containsKey(mComponentName) || factory.packComponents.containsKey(mComponentName));
-            mPrefPack.setChecked(mPrefPack.isEnabled() && CustomIconPack.isEnabledForApp(getContext(), mComponentName));
+            boolean enable = factory.packCalendars.containsKey(mComponentName) || factory.packComponents.containsKey(mComponentName);
+            mPrefPack.setEnabled(enable);
+            mPrefPack.setChecked(enable && CustomIconPack.isEnabledForApp(getContext(), mComponentName));
+            if (enable) {
+                PackageManager pm = getContext().getPackageManager();
+                try {
+                    mPrefPack.setSummary(pm.getPackageInfo(factory.iconPack, 0).applicationInfo.loadLabel(pm));
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
 
             mPrefHide.setChecked(CustomAppFilter.isHiddenApp(getContext(), mComponentName));
 

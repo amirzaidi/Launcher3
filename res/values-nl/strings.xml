@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">UITSCHAKELEN</string>
     <string name="action_edit">Bewerken</string>
   <string name="hide_app_sum">App verbergen in het app-overzicht</string>
+  <string name="hide_app">App verbergen</string>
 </resources>

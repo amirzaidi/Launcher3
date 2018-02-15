@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">כבה</string>
     <string name="action_edit">ערוך</string>
   <string name="hide_app_sum">הסתר אפליקציה ממגירת האפליקציות</string>
+  <string name="hide_app">הסתר אפליקציה</string>
 </resources>

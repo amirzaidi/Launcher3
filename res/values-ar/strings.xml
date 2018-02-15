@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">إيقاف</string>
     <string name="action_edit">تحرير</string>
   <string name="hide_app_sum">إخفاء من قائمة البرامج</string>
+  <string name="hide_app">إخفاء التطبيق</string>
 </resources>

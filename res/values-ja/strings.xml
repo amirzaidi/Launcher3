@@ -148,4 +148,5 @@
     <string name="label_turn_off_suggestions">非表示にする</string>
     <string name="action_edit">編集</string>
   <string name="hide_app_sum">ドロワーからアプリを非表示にする</string>
+  <string name="hide_app">アプリを隠す</string>
 </resources>
