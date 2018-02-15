@@ -16,6 +16,7 @@
 
 package com.google.android.apps.nexuslauncher;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -59,7 +60,10 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
     protected void handleClose(boolean animate) {
         super.handleClose(animate);
         try {
-            mFragmentManager.beginTransaction().remove(mFragmentManager.findFragmentById(R.id.sheet_prefs)).commit();
+            Fragment remove = mFragmentManager.findFragmentById(R.id.sheet_prefs);
+            if (remove != null) {
+                mFragmentManager.beginTransaction().remove(remove).commit();
+            }
         } catch (IllegalStateException ignored) {
         }
     }
