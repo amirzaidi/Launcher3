@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.Launcher;
+import com.android.launcher3.LauncherModel;
 import com.android.launcher3.R;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserManagerCompat;
@@ -37,7 +38,6 @@ import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.widget.WidgetsBottomSheet;
 
 public class CustomBottomSheet extends WidgetsBottomSheet {
-    private Launcher mLauncher;
     private FragmentManager mFragmentManager;
 
     public CustomBottomSheet(Context context, AttributeSet attrs) {
@@ -46,8 +46,7 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
 
     public CustomBottomSheet(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mLauncher = Launcher.getLauncher(context);
-        mFragmentManager = mLauncher.getFragmentManager();
+        mFragmentManager = Launcher.getLauncher(context).getFragmentManager();
     }
 
     @Override
@@ -58,46 +57,48 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
     }
 
     @Override
-    protected void handleClose(boolean animate) {
-        super.handleClose(animate);
-        try {
-            Fragment remove = mFragmentManager.findFragmentById(R.id.sheet_prefs);
-            if (remove != null) {
-                mFragmentManager.beginTransaction().remove(remove).commit();
-            }
-        } catch (IllegalStateException ignored) {
+    public void onDetachedFromWindow() {
+        Fragment pf = mFragmentManager.findFragmentById(R.id.sheet_prefs);
+        if (pf != null) {
+            mFragmentManager.beginTransaction().remove(pf).commitAllowingStateLoss();
         }
+        super.onDetachedFromWindow();
     }
 
-    public static class PrefsFragment extends PreferenceFragment
-            implements Preference.OnPreferenceChangeListener {
+    @Override
+    protected void onWidgetsBound() {
+    }
+
+    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
         private final static String PREF_PACK = "pref_app_icon_pack";
         private final static String PREF_HIDE = "pref_app_hide";
         private SwitchPreference mPrefPack;
         private SwitchPreference mPrefHide;
-        private ItemInfo mItemInfo;
+
         private String mComponentName;
+        private String mPackageName;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.app_edit_prefs);
-
-            mPrefPack = (SwitchPreference) findPreference(PREF_PACK);
-            mPrefHide = (SwitchPreference) findPreference(PREF_HIDE);
         }
 
         public void loadForApp(ItemInfo itemInfo) {
-            mItemInfo = itemInfo;
             mComponentName = itemInfo.getTargetComponent().toString();
+            mPackageName = itemInfo.getTargetComponent().getPackageName();
 
-            CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(getContext());
+            mPrefPack = (SwitchPreference) findPreference(PREF_PACK);
+            mPrefHide = (SwitchPreference) findPreference(PREF_HIDE);
+
+            Context context = getActivity();
+            CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(context);
 
             boolean enable = factory.packCalendars.containsKey(mComponentName) || factory.packComponents.containsKey(mComponentName);
             mPrefPack.setEnabled(enable);
-            mPrefPack.setChecked(enable && CustomIconPack.isEnabledForApp(getContext(), mComponentName));
+            mPrefPack.setChecked(enable && CustomIconPack.isEnabledForApp(context, mComponentName));
             if (enable) {
-                PackageManager pm = getContext().getPackageManager();
+                PackageManager pm = context.getPackageManager();
                 try {
                     mPrefPack.setSummary(pm.getPackageInfo(factory.iconPack, 0).applicationInfo.loadLabel(pm));
                 } catch (PackageManager.NameNotFoundException e) {
@@ -105,7 +106,7 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
                 }
             }
 
-            mPrefHide.setChecked(CustomAppFilter.isHiddenApp(getContext(), mComponentName));
+            mPrefHide.setChecked(CustomAppFilter.isHiddenApp(context, mComponentName));
 
             mPrefPack.setOnPreferenceChangeListener(this);
             mPrefHide.setOnPreferenceChangeListener(this);
@@ -114,8 +115,8 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             boolean enabled = (boolean) newValue;
-            Launcher launcher = Launcher.getLauncher(getContext());
-            String[] pkgs = new String[] { mItemInfo.getTargetComponent().getPackageName() };
+            Launcher launcher = Launcher.getLauncher(getActivity());
+            String[] pkgs = new String[] { mPackageName };
             switch (preference.getKey()) {
                 case PREF_PACK:
                     CustomIconPack.setAppState(launcher, mComponentName, enabled);
@@ -123,19 +124,17 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
                     break;
                 case PREF_HIDE:
                     CustomAppFilter.setComponentNameState(launcher, mComponentName, !enabled);
+                    LauncherAppsCompat apps = LauncherAppsCompat.getInstance(launcher);
+                    LauncherModel model = launcher.getModel();
                     for (UserHandle user : UserManagerCompat.getInstance(launcher).getUserProfiles()) {
-                        if (!LauncherAppsCompat.getInstance(launcher).getActivityList(pkgs[0], user).isEmpty()) {
-                            launcher.getModel().onPackagesUnavailable(pkgs, user, false);
-                            launcher.getModel().onPackagesAvailable(pkgs, user, false);
+                        if (!apps.getActivityList(pkgs[0], user).isEmpty()) {
+                            model.onPackagesUnavailable(pkgs, user, false);
+                            model.onPackagesAvailable(pkgs, user, false);
                         }
                     }
                     break;
             }
             return true;
         }
-    }
-
-    @Override
-    protected void onWidgetsBound() {
     }
 }
