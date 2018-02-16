@@ -58,12 +58,14 @@ public class CustomIconProvider extends DynamicIconProvider {
                 DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
                 for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
                     Set<String> packages = new HashSet<>();
-                    for (Map.Entry<String, String> calendars : mFactory.packCalendars.entrySet()) {
-                        ComponentName componentName = ComponentName.unflattenFromString(calendars.getKey().substring(14, calendars.getKey().length() - 1));
-                        if (componentName != null) {
-                            String pkg = componentName.getPackageName();
-                            if (!apps.getActivityList(pkg, user).isEmpty()) {
-                                packages.add(pkg);
+                    for (String key : mFactory.packCalendars.keySet()) {
+                        if (key.startsWith("ComponentInfo") && key.length() >= 15) {
+                            ComponentName componentName = ComponentName.unflattenFromString(key.substring(14, key.length() - 1));
+                            if (componentName != null) {
+                                String pkg = componentName.getPackageName();
+                                if (!apps.getActivityList(pkg, user).isEmpty()) {
+                                    packages.add(pkg);
+                                }
                             }
                         }
                     }
