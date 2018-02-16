@@ -42,7 +42,12 @@ public class NexusLauncherActivity extends Launcher {
         super.onStart();
         if (FeatureFlags.QSB_ON_FIRST_SCREEN != showSmartspace()) {
             Utilities.getPrefs(this).edit().putBoolean(PREF_IS_RELOAD, true).apply();
-            recreate();
+            if (Utilities.ATLEAST_NOUGAT) {
+                recreate();
+            } else {
+                finish();
+                startActivity(getIntent());
+            }
         }
     }
 
