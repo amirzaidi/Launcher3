@@ -102,3 +102,11 @@
 -keep interface com.android.launcher3.model.nano.LauncherDumpProto.** {
   *;
 }
+
+-keep class com.google.android.apps.nexuslauncher.CustomAppFilter { *; }
+
+-keep class com.google.android.apps.nexuslauncher.CustomIconProvider { *; }
+
+-keep class com.google.android.apps.nexuslauncher.CustomDrawableFactory { *; }
+
+-keep class com.google.android.apps.nexuslauncher.CustomAppPredictor { *; }
