@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.os.UserHandle;
 
 import com.android.launcher3.LauncherAppState;
@@ -18,9 +20,14 @@ import com.android.launcher3.shortcuts.DeepShortcutManager;
 import com.android.launcher3.shortcuts.ShortcutInfoCompat;
 import com.android.launcher3.util.LooperExecutor;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class CustomIconUtils {
@@ -110,6 +117,37 @@ public class CustomIconUtils {
         List<ShortcutInfoCompat> shortcuts = shortcutManager.queryForPinnedShortcuts(pkg, user);
         if (!shortcuts.isEmpty()) {
             model.updatePinnedShortcuts(pkg, shortcuts, user);
+        }
+    }
+
+    static void parsePack(Map<String, Integer> packComponents, Map<String, String> packCalendars, PackageManager pm, String iconPack) {
+        try {
+            Resources res = pm.getResourcesForApplication(iconPack);
+            int resId = res.getIdentifier("appfilter", "xml", iconPack);
+            if (resId != 0) {
+                XmlResourceParser parseXml = pm.getXml(iconPack, resId, null);
+                while (parseXml.next() != XmlPullParser.END_DOCUMENT) {
+                    if (parseXml.getEventType() == XmlPullParser.START_TAG) {
+                        boolean isCalendar = parseXml.getName().equals("calendar");
+                        if (isCalendar || parseXml.getName().equals("item")) {
+                            String componentName = parseXml.getAttributeValue(null, "component");
+                            String drawableName = parseXml.getAttributeValue(null, isCalendar ? "prefix" : "drawable");
+                            if (componentName != null && drawableName != null) {
+                                if (isCalendar) {
+                                    packCalendars.put(componentName, drawableName);
+                                } else {
+                                    int drawableId = res.getIdentifier(drawableName, "drawable", iconPack);
+                                    if (drawableId != 0) {
+                                        packComponents.put(componentName, drawableId);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException | XmlPullParserException | IOException e) {
+            e.printStackTrace();
         }
     }
 }

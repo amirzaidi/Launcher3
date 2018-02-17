@@ -104,7 +104,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                         if (((String) newValue).isEmpty()) {
                             CustomAppFilter.emptyAppFilter(mContext);
                         }
-                        CustomIconPack.clearDisabledApps(mContext);
+                        CustomIconProvider.clearDisabledApps(mContext);
                         CustomIconUtils.applyIconPackAsync(mContext);
                     }
                     return true;

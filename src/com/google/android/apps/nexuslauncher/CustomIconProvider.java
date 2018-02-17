@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -29,10 +30,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class CustomIconProvider extends DynamicIconProvider {
+    public final static String DISABLE_PACK_PREF = "all_apps_disable_pack";
+
     private final Context mContext;
     private CustomDrawableFactory mFactory;
     private final BroadcastReceiver mDateChangeReceiver;
@@ -91,7 +93,7 @@ public class CustomIconProvider extends DynamicIconProvider {
         String packageName = launcherActivityInfo.getApplicationInfo().packageName;
         String component = launcherActivityInfo.getComponentName().toString();
         Drawable drawable = null;
-        if (CustomIconPack.isEnabledForApp(mContext, component)) {
+        if (isEnabledForApp(mContext, component)) {
             PackageManager pm = mContext.getPackageManager();
             if (mFactory.packCalendars.containsKey(component)) {
                 try {
@@ -136,5 +138,34 @@ public class CustomIconProvider extends DynamicIconProvider {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    static void clearDisabledApps(Context context) {
+        setDisabledApps(context, new HashSet<String>());
+    }
+
+    static boolean isEnabledForApp(Context context, String comp) {
+        return !getDisabledApps(context).contains(comp);
+    }
+
+    static void setAppState(Context context, String comp, boolean enabled) {
+        Set<String> disabledApps = getDisabledApps(context);
+        while (disabledApps.contains(comp)) {
+            disabledApps.remove(comp);
+        }
+        if (!enabled) {
+            disabledApps.add(comp);
+        }
+        setDisabledApps(context, disabledApps);
+    }
+
+    private static Set<String> getDisabledApps(Context context) {
+        return new HashSet<>(Utilities.getPrefs(context).getStringSet(DISABLE_PACK_PREF, new HashSet<String>()));
+    }
+
+    private static void setDisabledApps(Context context, Set<String> disabledApps) {
+        SharedPreferences.Editor editor = Utilities.getPrefs(context).edit();
+        editor.putStringSet(DISABLE_PACK_PREF, disabledApps);
+        editor.apply();
     }
 }

@@ -96,7 +96,7 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
 
             boolean enable = factory.packCalendars.containsKey(mComponentName) || factory.packComponents.containsKey(mComponentName);
             mPrefPack.setEnabled(enable);
-            mPrefPack.setChecked(enable && CustomIconPack.isEnabledForApp(context, mComponentName));
+            mPrefPack.setChecked(enable && CustomIconProvider.isEnabledForApp(context, mComponentName));
             if (enable) {
                 PackageManager pm = context.getPackageManager();
                 try {
@@ -119,7 +119,7 @@ public class CustomBottomSheet extends WidgetsBottomSheet {
             String[] pkgs = new String[] { mPackageName };
             switch (preference.getKey()) {
                 case PREF_PACK:
-                    CustomIconPack.setAppState(launcher, mComponentName, enabled);
+                    CustomIconProvider.setAppState(launcher, mComponentName, enabled);
                     CustomIconUtils.reloadIcons(launcher, pkgs[0]);
                     break;
                 case PREF_HIDE:
