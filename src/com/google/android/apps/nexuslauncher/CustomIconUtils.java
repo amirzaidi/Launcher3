@@ -78,23 +78,31 @@ public class CustomIconUtils {
         new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
             @Override
             public void run() {
+                CustomIconProvider.clearDisabledApps(context);
                 ((CustomDrawableFactory) DrawableFactory.get(context)).reloadIconPack();
+
+                if (CustomIconUtils.getCurrentPack(context).isEmpty()) {
+                    CustomAppFilter.resetAppFilter(context);
+                }
 
                 LauncherModel model = LauncherAppState.getInstance(context).getModel();
                 DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
-
-                String[] packProviders = getPackProviders(context).keySet().toArray(new String[0]);
+                LauncherAppsCompat launcherApps = LauncherAppsCompat.getInstance(context);
 
                 for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-                    model.onPackagesUnavailable(packProviders, user, false);
-                    model.onPackagesAvailable(packProviders, user, false);
-
-                    Set<String> packages = new HashSet<>();
-                    for (LauncherActivityInfo info : LauncherAppsCompat.getInstance(context).getActivityList(null, user)) {
-                        packages.add(info.getApplicationInfo().packageName);
+                    Set<String> pkgsSet = new HashSet<>();
+                    for (LauncherActivityInfo info : launcherApps.getActivityList(null, user)) {
+                        pkgsSet.add(info.getComponentName().getPackageName());
                     }
-                    for (String pkg : packages) {
-                        reloadIcon(shortcutManager, model, user, pkg);
+                    for (String pkg : pkgsSet) {
+                        final String[] pkgs = new String[] { pkg };
+                        model.onPackagesUnavailable(pkgs, user, false);
+                        model.onPackagesAvailable(pkgs, user, false);
+
+                        List<ShortcutInfoCompat> shortcuts = shortcutManager.queryForPinnedShortcuts(pkg, user);
+                        if (!shortcuts.isEmpty()) {
+                            model.updatePinnedShortcuts(pkg, shortcuts, user);
+                        }
                     }
                 }
             }
