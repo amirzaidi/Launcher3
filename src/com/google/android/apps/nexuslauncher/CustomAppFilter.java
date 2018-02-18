@@ -8,7 +8,6 @@ import android.os.UserHandle;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
-import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserManagerCompat;
 
 import java.util.HashSet;
@@ -48,15 +47,9 @@ public class CustomAppFilter extends NexusAppFilter {
         }
         setHiddenApps(context, hiddenApps);
 
-        LauncherAppsCompat launcherApps = LauncherAppsCompat.getInstance(context);
         LauncherModel model = Launcher.getLauncher(context).getModel();
-        String[] pkgs = new String[] { pkg };
-
         for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-            if (!launcherApps.getActivityList(pkg, user).isEmpty()) {
-                model.onPackagesUnavailable(pkgs, user, false);
-                model.onPackagesAvailable(pkgs, user, false);
-            }
+            model.onPackagesReload(user);
         }
     }
 

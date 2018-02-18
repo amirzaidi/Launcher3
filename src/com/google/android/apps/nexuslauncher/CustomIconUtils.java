@@ -28,10 +28,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class CustomIconUtils {
-    final static String[] ICON_INTENTS = new String[] {
+    private final static String[] ICON_INTENTS = new String[] {
             "com.fede.launcher.THEME_ICONPACK",
             "com.anddoes.launcher.THEME",
             "com.teslacoilsw.launcher.THEME",
@@ -78,31 +77,28 @@ public class CustomIconUtils {
         new LooperExecutor(LauncherModel.getWorkerLooper()).execute(new Runnable() {
             @Override
             public void run() {
-                CustomIconProvider.clearDisabledApps(context);
-                ((CustomDrawableFactory) DrawableFactory.get(context)).reloadIconPack();
+                UserManagerCompat userManagerCompat = UserManagerCompat.getInstance(context);
+                LauncherModel model = LauncherAppState.getInstance(context).getModel();
 
                 if (CustomIconUtils.getCurrentPack(context).isEmpty()) {
                     CustomAppFilter.resetAppFilter(context);
                 }
+                for (UserHandle user : userManagerCompat.getUserProfiles()) {
+                    model.onPackagesReload(user);
+                }
 
-                LauncherModel model = LauncherAppState.getInstance(context).getModel();
+                CustomIconProvider.clearDisabledApps(context);
+                ((CustomDrawableFactory) DrawableFactory.get(context)).reloadIconPack();
+
                 DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
                 LauncherAppsCompat launcherApps = LauncherAppsCompat.getInstance(context);
-
-                for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-                    Set<String> pkgsSet = new HashSet<>();
+                for (UserHandle user : userManagerCompat.getUserProfiles()) {
+                    HashSet<String> pkgsSet = new HashSet<>();
                     for (LauncherActivityInfo info : launcherApps.getActivityList(null, user)) {
                         pkgsSet.add(info.getComponentName().getPackageName());
                     }
                     for (String pkg : pkgsSet) {
-                        final String[] pkgs = new String[] { pkg };
-                        model.onPackagesUnavailable(pkgs, user, false);
-                        model.onPackagesAvailable(pkgs, user, false);
-
-                        List<ShortcutInfoCompat> shortcuts = shortcutManager.queryForPinnedShortcuts(pkg, user);
-                        if (!shortcuts.isEmpty()) {
-                            model.updatePinnedShortcuts(pkg, shortcuts, user);
-                        }
+                        reloadIcon(shortcutManager, model, user, pkg);
                     }
                 }
             }
@@ -112,9 +108,10 @@ public class CustomIconUtils {
     static void reloadIcons(final Context context, String pkg) {
         LauncherModel model = LauncherAppState.getInstance(context).getModel();
         DeepShortcutManager shortcutManager = DeepShortcutManager.getInstance(context);
+        LauncherAppsCompat launcherApps = LauncherAppsCompat.getInstance(context);
 
         for (UserHandle user : UserManagerCompat.getInstance(context).getUserProfiles()) {
-            if (!LauncherAppsCompat.getInstance(context).getActivityList(pkg, user).isEmpty()) {
+            if (!launcherApps.getActivityList(pkg, user).isEmpty()) {
                 reloadIcon(shortcutManager, model, user, pkg);
             }
         }
