@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.LauncherActivityInfo;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
@@ -11,16 +12,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
+import android.os.UserHandle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.launcher3.AllAppsList;
 import com.android.launcher3.AppInfo;
+import com.android.launcher3.IconCache;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.allapps.AppInfoComparator;
 import com.android.launcher3.allapps.search.DefaultAppSearchAlgorithm;
+import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.model.BgDataModel;
 import com.android.launcher3.model.LoaderResults;
@@ -204,9 +208,15 @@ public class AppSearchProvider extends ContentProvider
                 return Collections.emptyList();
             }
             final ArrayList<AppInfo> list = new ArrayList<>();
-            final ArrayList<AppInfo> data = this.mAllAppsList.data;
             final DefaultAppSearchAlgorithm.StringMatcher instance = DefaultAppSearchAlgorithm.StringMatcher.getInstance();
-            for (final AppInfo appInfo : data) {
+
+            Context context = mApp.getContext();
+            final LauncherAppsCompat launcherApps = LauncherAppsCompat.getInstance(context);
+            final UserHandle user = android.os.Process.myUserHandle();
+            final IconCache iconCache = LauncherAppState.getInstance(context).getIconCache();
+            for (LauncherActivityInfo info : launcherApps.getActivityList(null, user)) {
+                final AppInfo appInfo = new AppInfo(context, info, user);
+                iconCache.getTitleAndIcon(appInfo, false);
                 if (DefaultAppSearchAlgorithm.matches(appInfo, this.mQuery, instance)) {
                     list.add(appInfo);
                     if (!appInfo.usingLowResIcon) {
