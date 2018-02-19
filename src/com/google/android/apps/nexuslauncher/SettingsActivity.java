@@ -119,6 +119,7 @@ public class SettingsActivity extends com.android.launcher3.SettingsActivity imp
                                 true /* indeterminate */,
                                 false /* cancelable */);
 
+                        CustomIconUtils.setCurrentPack(getActivity(), (String) newValue);
                         CustomIconUtils.applyIconPackAsync(mContext);
 
                         new Handler().postDelayed(new Runnable() {
