@@ -86,7 +86,7 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
     public FastBitmapDrawable newIcon(Bitmap icon, ItemInfo info) {
         ensureInitialLoadComplete();
         String clockComp = DynamicClock.DESK_CLOCK.toString();
-        if (packComponents.containsKey(DynamicClock.DESK_CLOCK.toString()) && CustomIconProvider.isEnabledForApp(mContext, clockComp)) {
+        if (packComponents.containsKey(clockComp) && CustomIconProvider.isEnabledForApp(mContext, clockComp)) {
             return new FastBitmapDrawable(icon);
         }
         return super.newIcon(icon, info);
