@@ -29,12 +29,16 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     android-support-v7-palette \
     android-support-dynamic-animation
 
+LOCAL_AIDL_INCLUDES := src/com/google/android/libraries/launcherclient
+
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src) \
     $(call all-java-files-under, src_config) \
     $(call all-java-files-under, src_flags) \
+    $(call all-Iaidl-files-under, src) \
     $(call all-proto-files-under, protos) \
-    $(call all-proto-files-under, proto_overrides)
+    $(call all-proto-files-under, proto_overrides) \
+    $(call all-proto-files-under, proto_pixel)
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res \
@@ -43,10 +47,11 @@ LOCAL_RESOURCE_DIR := \
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_PROTOC_OPTIMIZE_TYPE := nano
-LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/
+LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/ --proto_path=$(LOCAL_PATH)/proto_pixel/
 LOCAL_PROTO_JAVA_OUTPUT_PARAMS := enum_style=java
 
 LOCAL_AAPT_FLAGS := \
+    --rename-manifest-package com.google.android.apps.nexuslauncher \
     --auto-add-overlay \
     --extra-packages android.support.v7.recyclerview \
 
@@ -75,12 +80,16 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     android-support-v7-palette \
     android-support-dynamic-animation
 
+LOCAL_AIDL_INCLUDES := src/com/google/android/libraries/launcherclient
+
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src) \
     $(call all-java-files-under, src_config) \
     $(call all-java-files-under, go/src_flags) \
+    $(call all-Iaidl-files-under, src) \
     $(call all-proto-files-under, protos) \
-    $(call all-proto-files-under, proto_overrides)
+    $(call all-proto-files-under, proto_overrides) \
+    $(call all-proto-files-under, proto_pixel)
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/go/res \
@@ -90,10 +99,11 @@ LOCAL_RESOURCE_DIR := \
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 
 LOCAL_PROTOC_OPTIMIZE_TYPE := nano
-LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/
+LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/ --proto_path=$(LOCAL_PATH)/proto_pixel/
 LOCAL_PROTO_JAVA_OUTPUT_PARAMS := enum_style=java
 
 LOCAL_AAPT_FLAGS := \
+    --rename-manifest-package com.google.android.apps.nexuslauncher \
     --auto-add-overlay \
     --extra-packages android.support.v7.recyclerview \
 
@@ -118,10 +128,11 @@ include $(BUILD_PACKAGE)
 #
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := $(call all-proto-files-under, protos) $(call all-proto-files-under, proto_overrides)
+LOCAL_SRC_FILES := $(call all-proto-files-under, protos) $(call all-proto-files-under, proto_overrides) \
+    $(call all-proto-files-under, proto_pixel)
 
 LOCAL_PROTOC_OPTIMIZE_TYPE := nano
-LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/
+LOCAL_PROTOC_FLAGS := --proto_path=$(LOCAL_PATH)/protos/ --proto_path=$(LOCAL_PATH)/proto_overrides/ --proto_path=$(LOCAL_PATH)/proto_pixel/
 LOCAL_PROTO_JAVA_OUTPUT_PARAMS := enum_style=java
 
 LOCAL_MODULE_TAGS := optional
