@@ -29,8 +29,6 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     android-support-v7-palette \
     android-support-dynamic-animation
 
-LOCAL_AIDL_INCLUDES := src/com/google/android/libraries/launcherclient
-
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src) \
     $(call all-java-files-under, src_config) \
@@ -79,8 +77,6 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
     android-support-v7-recyclerview \
     android-support-v7-palette \
     android-support-dynamic-animation
-
-LOCAL_AIDL_INCLUDES := src/com/google/android/libraries/launcherclient
 
 LOCAL_SRC_FILES := \
     $(call all-java-files-under, src) \
