@@ -31,8 +31,8 @@
     <style name="BaseLauncherThemeWithCustomAttrs" parent="@style/BaseLauncherTheme">
         <item name="allAppsScrimColor">#CCFFFFFF</item>
         <item name="allAppsNavBarScrimColor">@color/all_apps_navbar_color</item>
-        <item name="popupColorPrimary">#FFF</item>
-        <item name="popupColorSecondary">#F5F5F5</item> <!-- Gray 100 -->
+        <item name="popupColorPrimary">#D5956D</item><!-- #FFF -->
+        <item name="popupColorSecondary">#8CBF26</item> <!-- Gray 100 #F5F5F5 -->
         <item name="popupColorTertiary">#E0E0E0</item> <!-- Gray 300 -->
         <item name="isMainColorDark">false</item>
         <item name="isWorkspaceDarkText">false</item>
@@ -45,7 +45,9 @@
         <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="LauncherTheme" parent="@style/BaseLauncherThemeWithCustomAttrs"></style>
+    <style name="LauncherTheme" parent="@style/BaseLauncherThemeWithCustomAttrs">
+        <item name="android:colorPrimaryDark">#ffA6ACDD</item><!--  -->
+	</style>
 
     <style name="LauncherThemeDarkText" parent="@style/LauncherTheme">
         <item name="workspaceTextColor">#FF212121</item>
@@ -59,14 +61,15 @@
     <style name="LauncherThemeDark" parent="@style/LauncherTheme">
         <item name="android:textColorPrimary">#FFFFFFFF</item>
         <item name="android:textColorSecondary">#FFFFFFFF</item>
+        <item name="android:colorPrimaryDark">#ffB49C8D</item><!--  -->
         <item name="android:textColorTertiary">#CCFFFFFF</item>
         <item name="android:textColorHint">#A0FFFFFF</item>
         <item name="android:colorControlHighlight">#A0FFFFFF</item>
         <item name="android:colorPrimary">#FF333333</item>
         <item name="allAppsScrimColor">#7A212121</item>
         <item name="allAppsNavBarScrimColor">#80000000</item>
-        <item name="popupColorPrimary">?android:attr/colorPrimary</item>
-        <item name="popupColorSecondary">#424242</item> <!-- Gray 800 -->
+        <item name="popupColorPrimary">#FFA86D48</item><!--  ?android:attr/colorPrimary -->
+        <item name="popupColorSecondary">#697F3D</item> <!-- #424242   Gray 800 -->
         <item name="popupColorTertiary">#757575</item> <!-- Gray 600 -->
         <item name="widgetsTheme">@style/WidgetContainerTheme.Dark</item>
         <item name="isMainColorDark">true</item>

@@ -23,7 +23,7 @@
     android:paddingBottom="8dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="sans-serif-condensed"
     android:textSize="14sp"
     android:textColor="?android:attr/textColorTertiary"
     android:focusable="false" />

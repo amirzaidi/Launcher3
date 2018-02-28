@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingTop="4dp"
-        android:fontFamily="sans-serif"
+        android:fontFamily="sans-serif-condensed"
         android:textColor="?android:attr/textColorTertiary"
         android:textSize="14sp"
         android:text="@string/action_edit" />
