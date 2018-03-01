@@ -342,4 +342,12 @@
     <string name="hide_app_sum">Hide app from the app drawer</string>
     <string name="hide_app">Hide app</string>
     <string name="icon_shape_rounded_square">Rounded square</string>
+
+    <!-- Search bar customization -->
+    <string name="custom_search_bar">Search bar settings</string>
+    <string name="force_mic">Force mic</string>
+    <string name="force_colour_logo">Colored Google logo on search bar</string>
+    <string name="dark_themeqsb">Dark search bar</string>
+    <string name="transparentqsb">Transparent search bar</string>
+    <string name="dark_themeqsballapp">Dark search bar in All Apps</string>
 </resources>

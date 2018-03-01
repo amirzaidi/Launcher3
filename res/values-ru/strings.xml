@@ -147,7 +147,13 @@
     <string name="msg_disable_suggestions_prompt">Рекомендуемые приложения не будут показываться в начале списка. Данные, связанные с этой функцией, будут удалены.</string>
     <string name="label_turn_off_suggestions">ОТКЛЮЧИТЬ</string>
     <string name="action_edit">Редактировать</string>
-  <string name="hide_app_sum">Скрыть приложение из меню</string>
-  <string name="hide_app">Скрыть приложение</string>
+    <string name="hide_app_sum">Скрыть приложение из меню</string>
+    <string name="hide_app">Скрыть приложение</string>
     <string name="icon_shape_rounded_square">Квадрат с закругленными углами</string>
+    <string name="force_mic">Микрофон в строке поиска</string>
+    <string name="force_colour_logo">Цветной логотип Google</string>
+    <string name="dark_themeqsb">Темная строка поиска</string>
+    <string name="transparentqsb">Прозрачная строка поиска</string>
+    <string name="dark_themeqsballapp">Темная строка поиска в меню</string>
+    <string name="custom_search_bar">Настройки строки поиска</string>
 </resources>
