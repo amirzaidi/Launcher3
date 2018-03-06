@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* //device/apps/common/assets/res/any/colors.xml
+**
+** Copyright 2008, The Android Open Source Project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources>
+    <!-- The color tints to apply to the text and drag view when hovering
+         over the delete target or the info target -->
+    <color name="delete_target_hover_tint">#FFC1C1C1</color>
+    <color name="uninstall_target_hover_tint">#FFF0592B</color>
+
+    <color name="focused_background">#80c6c5c5</color>
+
+    <color name="default_shadow_color_no_alpha">#FF000000</color>
+
+    <color name="spring_loaded_panel_color">#40FFFFFF</color>
+    <color name="spring_loaded_highlighted_panel_border_color">#FFF</color>
+
+    <!-- Popup container -->
+    <color name="notification_icon_default_color">#757575</color> <!-- Gray 600 -->
+    <color name="badge_color">@android:color/transparent</color>
+    <color name="folder_badge_color">#FFFFFF</color>
+
+    <color name="icon_background">#ff4285f4</color> <!-- Pixel Blue -->
+    <color name="legacy_icon_background">#FFFFFF</color>
+
+    <color name="all_apps_bg_hand_fill">#E5E5E5</color>
+    <color name="all_apps_bg_hand_fill_dark">#9AA0A6</color>
+
+    <!-- Backports -->
+    <color name="textColorPrimaryInverse">#de000000</color>
+    <color name="textColorSecondaryInverse">#8a000000</color>
+
+    <color name="colorPrimary">#fff5f5f5</color>
+    <color name="colorPrimaryDark">#ffe0e0e0</color>
+    <color name="colorSecondary">#ffeeeeee</color>
+
+    <color name="lollipopStatusBar">#ff9e9e9e</color>
+    <color name="all_apps_navbar_color">#44000000</color><!-- #28000000 -->
+
+    <!-- Pixel -->
+    <color name="colorAccent">#ff4285f4</color>
+
+    <color name="qsb_icon_shadow_color">#20000000</color>
+    <color name="qsb_dark_icon_tint">#ff757575</color>
+</resources>
