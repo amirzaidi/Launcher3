@@ -131,7 +131,7 @@ public class PreviewBackground {
     public void setup(Launcher launcher, View invalidateDelegate,
                       int availableSpace, int topPadding) {
         mInvalidateDelegate = invalidateDelegate;
-        mBgColor = Themes.getAttrColor(launcher, android.R.attr.colorPrimary);
+        mBgColor = Themes.getAttrColor(launcher, android.R.attr.colorPrimaryDark);
 
         DeviceProfile grid = launcher.getDeviceProfile();
         final int previewSize = grid.folderIconSizePx;

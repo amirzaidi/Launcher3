@@ -21,7 +21,7 @@
     android:gravity="center"
     android:paddingLeft="@dimen/dynamic_grid_edge_margin"
     android:paddingRight="@dimen/dynamic_grid_edge_margin"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="sans-serif-condensed"
     android:textSize="14sp"
     android:textColor="?android:attr/colorAccent"
     android:text="@string/all_apps_search_market_message"

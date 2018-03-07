@@ -52,6 +52,9 @@
                 android:gravity="center_vertical"
                 android:text="@string/notifications_header"
                 android:textSize="@dimen/notification_header_text_size"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="bold"
+                android:textAllCaps="true"
                 android:textColor="?android:attr/textColorPrimary" />
             <TextView
                 android:id="@+id/notification_count"
@@ -60,7 +63,7 @@
                 android:layout_gravity="end"
                 android:gravity="center"
                 android:textSize="@dimen/notification_header_count_text_size"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-condensed"
                 android:textColor="?android:attr/textColorPrimary" />
         </FrameLayout>
 
