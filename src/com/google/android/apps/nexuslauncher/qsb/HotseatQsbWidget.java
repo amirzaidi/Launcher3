@@ -64,8 +64,15 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
     }
 
     private void setColors() {
+        boolean forcecolour = Utilities.getPrefs((getContext())).getBoolean("pref_forcecolourlogo", false);
+        boolean darkqsb = Utilities.getPrefs((getContext())).getBoolean("pref_darkqsb", false);
+        boolean transparentqsb = Utilities.getPrefs((getContext())).getBoolean("pref_transparentqsbqsb", true);
         View.inflate(new ContextThemeWrapper(getContext(), mIsDefaultLiveWallpaper ? R.style.HotseatQsbTheme_Colored : R.style.HotseatQsbTheme), R.layout.qsb_hotseat_content, this);
         bz(mIsDefaultLiveWallpaper ? 0xCCFFFFFF : 0x99FAFAFA);
+        if (transparentqsb && !forcecolour) bz(0x99FAFAFA);
+        if (!transparentqsb && forcecolour) bz(0xFFFFFFFF);
+        if (darkqsb && transparentqsb) bz(0xCC444444);
+        if (darkqsb && !transparentqsb) bz(0xFF444444);
     }
 
     private void openQSB() {
@@ -108,6 +115,10 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
 
     private boolean isDefaultLiveWallpaper() {
         WallpaperInfo wallpaperInfo = WallpaperManager.getInstance(getContext()).getWallpaperInfo();
+        boolean forcecolour = Utilities.getPrefs((getContext())).getBoolean("pref_forcecolourlogo", false);
+        if (forcecolour) {
+            return forcecolour;
+        }
         return wallpaperInfo != null && wallpaperInfo.getComponent().flattenToString().equals(getContext().getString(R.string.default_live_wallpaper));
     }
 

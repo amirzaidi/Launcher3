@@ -4038,6 +4038,25 @@ public class Launcher extends BaseActivity
                 // Recreate the activity so that it initializes the rotation preference again.
                 recreate();
             }
+            if (Utilities.TRANSPARENTQSB.equals(key)) {
+                // Recreate the activity so that it initializes the rotation preference again.
+                recreate();
+            }
+            if (Utilities.DARKQSB.equals(key)) {
+                // Recreate the activity so that it initializes the rotation preference again.
+                recreate();
+            }
+            if (Utilities.FORCECOLURLOGO_PREFERENCE_KEY.equals(key)) {
+                // Recreate the activity so that it initializes the rotation preference again.
+                recreate();
+            }
+            if (Utilities.MIC_PREFERENCE_KEY.equals(key)) {
+                // Recreate the activity so that it initializes the rotation preference again.
+                recreate();
+            }
+            if (Utilities.DARKQSBALLAPPS.equals(key)) {
+                recreate();
+            }
         }
     }
 }

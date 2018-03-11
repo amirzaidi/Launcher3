@@ -126,6 +126,11 @@ public final class Utilities {
             TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
     public static final String ALLOW_ROTATION_PREFERENCE_KEY = "pref_allowRotation";
+    public static final String MIC_PREFERENCE_KEY = "pref_enablemic";
+    public static final String FORCECOLURLOGO_PREFERENCE_KEY = "pref_forcecolourlogo";
+    public static final String TRANSPARENTQSB = "pref_transparentqsbqsb";
+    public static final String DARKQSB = "pref_darkqsb";
+    public static final String DARKQSBALLAPPS = "pref_darkqsballapp";
 
     public static boolean isPropertyEnabled(String propertyName) {
         return Log.isLoggable(propertyName, Log.VERBOSE);
