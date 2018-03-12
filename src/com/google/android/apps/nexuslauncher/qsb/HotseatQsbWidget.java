@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.WallpaperInfo;
 import android.app.WallpaperManager;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Toast;
 
 import com.android.launcher3.CellLayout;
 import com.android.launcher3.Launcher;
@@ -135,7 +137,11 @@ public class HotseatQsbWidget extends AbstractQsbLayout {
 
     @Override
     protected void noGoogleAppSearch() {
-        getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com")));
+        try {
+            getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com")));
+        } catch (ActivityNotFoundException exc) {
+            Toast.makeText(getContext(), R.string.no_activity_found_toast, Toast.LENGTH_LONG).show();
+        }
         playQsbAnimation();
     }
 
