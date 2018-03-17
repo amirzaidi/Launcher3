@@ -30,12 +30,12 @@ import java.util.List;
 public class DynamicIconProvider extends IconProvider {
     public static final String GOOGLE_CALENDAR = "com.google.android.calendar";
     private final BroadcastReceiver mDateChangeReceiver;
-    private final Context mContext;
     private final PackageManager mPackageManager;
     private int mDateOfMonth;
 
     public DynamicIconProvider(Context context) {
-        mContext = context;
+        super(context);
+        //mContext = context;
         mDateChangeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

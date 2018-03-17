@@ -36,14 +36,12 @@ import java.util.Set;
 public class CustomIconProvider extends DynamicIconProvider {
     public final static String DISABLE_PACK_PREF = "all_apps_disable_pack";
 
-    private final Context mContext;
     private CustomDrawableFactory mFactory;
     private final BroadcastReceiver mDateChangeReceiver;
     private int mDateOfMonth;
 
     public CustomIconProvider(Context context) {
         super(context);
-        mContext = context;
         mFactory = (CustomDrawableFactory) DrawableFactory.get(context);
 
         mDateChangeReceiver = new BroadcastReceiver() {
