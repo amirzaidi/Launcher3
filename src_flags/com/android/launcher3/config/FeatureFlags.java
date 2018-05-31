@@ -21,6 +21,9 @@ package com.android.launcher3.config;
  */
 public final class FeatureFlags extends BaseFlags {
 
+    // When enabled the promise icon is visible in all apps while installing an app.
+    public static final boolean LAUNCHER3_PROMISE_APPS_IN_ALL_APPS = true;
+
     // When enabled, icons not supporting {@link AdaptiveIconDrawable} will be wrapped in {@link FixedScaleDrawable}.
     public static final boolean LEGACY_ICON_TREATMENT = false;
 

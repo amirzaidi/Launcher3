@@ -5,6 +5,7 @@ import android.view.View;
 import com.android.launcher3.AbstractFloatingView;
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.Launcher;
+import com.android.launcher3.PromiseAppInfo;
 import com.android.launcher3.R;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.popup.SystemShortcut;
@@ -16,7 +17,7 @@ public class CustomEditShortcut extends SystemShortcut {
 
     @Override
     public View.OnClickListener getOnClickListener(final Launcher launcher, final ItemInfo itemInfo) {
-        if (CustomIconUtils.usingValidPack(launcher)) {
+        if (CustomIconUtils.usingValidPack(launcher) && !(itemInfo instanceof PromiseAppInfo)) {
             CustomDrawableFactory factory = (CustomDrawableFactory) DrawableFactory.get(launcher);
             factory.ensureInitialLoadComplete();
 
