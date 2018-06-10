@@ -15,11 +15,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
 
-import com.android.launcher3.IconProvider;
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.compat.UserManagerCompat;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
 import com.android.launcher3.shortcuts.ShortcutInfoCompat;
 import com.google.android.apps.nexuslauncher.clock.DynamicClock;
@@ -27,7 +27,7 @@ import com.google.android.apps.nexuslauncher.clock.DynamicClock;
 import java.util.Calendar;
 import java.util.List;
 
-public class DynamicIconProvider extends IconProvider {
+public class DynamicIconProvider extends AdaptiveIconProvider {
     public static final String GOOGLE_CALENDAR = "com.google.android.calendar";
     private final BroadcastReceiver mDateChangeReceiver;
     private final Context mContext;
@@ -35,6 +35,7 @@ public class DynamicIconProvider extends IconProvider {
     private int mDateOfMonth;
 
     public DynamicIconProvider(Context context) {
+        super(context);
         mContext = context;
         mDateChangeReceiver = new BroadcastReceiver() {
             @Override
@@ -99,6 +100,7 @@ public class DynamicIconProvider extends IconProvider {
             try {
                 Bundle metaData = mPackageManager.getActivityInfo(launcherActivityInfo.getComponentName(), PackageManager.GET_META_DATA | PackageManager.GET_UNINSTALLED_PACKAGES).metaData;
                 Resources resourcesForApplication = mPackageManager.getResourcesForApplication(packageName);
+                ReflectedSdkLoader.loadLatestSupported(resourcesForApplication);
                 int dayResId = getDayResId(metaData, resourcesForApplication);
                 if (dayResId != 0) {
                     drawable = resourcesForApplication.getDrawableForDensity(dayResId, iconDpi);
@@ -106,7 +108,7 @@ public class DynamicIconProvider extends IconProvider {
             } catch (NameNotFoundException ignored) {
             }
         } else if (!flattenDrawable &&
-                Utilities.ATLEAST_OREO &&
+                Utilities.ATLEAST_NOUGAT &&
                 DynamicClock.DESK_CLOCK.equals(launcherActivityInfo.getComponentName()) &&
                 Process.myUserHandle().equals(launcherActivityInfo.getUser())) {
             drawable = DynamicClock.getClock(mContext, iconDpi);

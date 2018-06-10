@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -14,6 +16,7 @@ import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.LooperExecutor;
 import com.google.android.apps.nexuslauncher.clock.CustomClock;
@@ -98,13 +101,19 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
         ComponentName componentName = info.getTargetComponent();
         if (packComponents.containsKey(info.getTargetComponent()) &&
                 CustomIconProvider.isEnabledForApp(mContext, new ComponentKey(componentName, info.user))) {
-            if (Utilities.ATLEAST_OREO &&
+            if (Utilities.ATLEAST_NOUGAT &&
                     info.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
                     info.user.equals(Process.myUserHandle())) {
                 int drawableId = packComponents.get(componentName);
                 if (packClocks.containsKey(drawableId)) {
-                    Drawable drawable = mContext.getPackageManager().getDrawable(iconPack, drawableId, null);
-                    return mCustomClockDrawer.drawIcon(icon, drawable, packClocks.get(drawableId));
+                    try {
+                        Resources res = mContext.getPackageManager().getResourcesForApplication(iconPack);
+                        ReflectedSdkLoader.loadLatestSupported(res);
+                        Drawable drawable = res.getDrawableForDensity(drawableId, icon.getDensity());
+                        return mCustomClockDrawer.drawIcon(icon, drawable, packClocks.get(drawableId));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             return new FastBitmapDrawable(icon);

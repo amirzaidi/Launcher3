@@ -16,6 +16,7 @@
 
 package com.android.launcher3.graphics;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -78,9 +79,9 @@ public class DrawableFactory {
         return new PreloadIconDrawable(icon, mPreloadProgressPath, context);
     }
 
-
+    @SuppressLint("NewApi")
     protected Path getPreloadProgressPath(Context context) {
-        if (Utilities.ATLEAST_OREO) {
+        if (Utilities.ATLEAST_NOUGAT) {
             try {
                 // Try to load the path from Mask Icon
                 Drawable icon = context.getDrawable(R.drawable.adaptive_icon_drawable_wrapper);

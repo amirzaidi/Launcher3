@@ -38,6 +38,7 @@ import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 import com.android.launcher3.util.LooperExecutor;
 
 import java.lang.reflect.Field;
@@ -60,7 +61,7 @@ public class IconShapeOverride {
 
     public static boolean isSupported(Context context) {
         if (!Utilities.ATLEAST_OREO) {
-            return false;
+            return ReflectedSdkLoader.sFeatureLevel == ReflectedSdkLoader.FEATURE_LEVEL.O;
         }
 
         try {

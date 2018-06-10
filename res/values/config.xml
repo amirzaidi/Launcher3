@@ -34,6 +34,8 @@
         <item>M50,0A50,30 0,0,1 100,30V70A50,30 0,0,1 0,70V30A50,30 0,0,1 50,0z</item>
     </string-array>
 
+    <string name="icon_shape_override_default">M50 0A50 50,0,1,1,50 100A50 50,0,1,1,50 0</string>
+
     <string-array translatable="false" name="icon_shape_override_paths_names">
         <!-- Option to not change the icon shape on home screen. [CHAR LIMIT=50] -->
         <item>@string/icon_shape_system_default</item>

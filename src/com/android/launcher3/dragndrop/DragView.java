@@ -193,7 +193,7 @@ public class DragView extends View {
      */
     @TargetApi(Build.VERSION_CODES.O)
     public void setItemInfo(final ItemInfo info) {
-        if (!(FeatureFlags.LAUNCHER3_SPRING_ICONS && Utilities.ATLEAST_OREO)) {
+        if (!(FeatureFlags.LAUNCHER3_SPRING_ICONS && Utilities.ATLEAST_NOUGAT_MR1)) {
             return;
         }
         if (info.itemType != LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
@@ -370,9 +370,9 @@ public class DragView extends View {
             Bitmap badge = LauncherIcons.getShortcutInfoBadge(si, appState.getIconCache());
 
             float badgeSize = mLauncher.getResources().getDimension(R.dimen.profile_badge_size);
-            float insetFraction = (iconSize - badgeSize) / iconSize;
+            int inset = iconSize - (int)badgeSize;
             return new InsetDrawable(new FastBitmapDrawable(badge),
-                    insetFraction, insetFraction, 0, 0);
+                    inset, inset, 0, 0);
         } else if (info.itemType == LauncherSettings.Favorites.ITEM_TYPE_FOLDER) {
             return ((FolderAdaptiveIcon) obj).getBadge();
         } else {

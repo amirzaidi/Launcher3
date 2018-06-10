@@ -18,7 +18,6 @@ package com.android.launcher3.shortcuts;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
@@ -29,6 +28,7 @@ import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 
 import com.android.launcher3.Utilities;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -68,6 +68,8 @@ public class DeepShortcutManagerBackport {
 
         try {
             Resources resourcesForApplication = pm.getResourcesForApplication(packageName);
+            ReflectedSdkLoader.loadLatestSupported(resourcesForApplication);
+
             AssetManager assets = resourcesForApplication.getAssets();
             XmlResourceParser parseXml = assets.openXmlResourceParser("AndroidManifest.xml");
 

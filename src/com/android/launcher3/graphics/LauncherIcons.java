@@ -104,7 +104,7 @@ public class LauncherIcons {
         float scale = 1f;
         if (!FeatureFlags.LAUNCHER3_DISABLE_ICON_NORMALIZATION) {
             normalizer = IconNormalizer.getInstance(context);
-            if (Utilities.ATLEAST_OREO && iconAppTargetSdk >= Build.VERSION_CODES.O) {
+            if (Utilities.ATLEAST_NOUGAT && iconAppTargetSdk >= Build.VERSION_CODES.O) {
                 boolean[] outShape = new boolean[1];
                 AdaptiveIconDrawable dr = (AdaptiveIconDrawable)
                         context.getDrawable(R.drawable.adaptive_icon_drawable_wrapper).mutate();
@@ -123,7 +123,7 @@ public class LauncherIcons {
             }
         }
         Bitmap bitmap = createIconBitmap(icon, context, scale);
-        if (FeatureFlags.ADAPTIVE_ICON_SHADOW && Utilities.ATLEAST_OREO &&
+        if (FeatureFlags.ADAPTIVE_ICON_SHADOW &&
                 icon instanceof AdaptiveIconDrawable) {
             bitmap = ShadowGenerator.getInstance(context).recreateIcon(bitmap);
         }
@@ -158,13 +158,13 @@ public class LauncherIcons {
         float scale = 1f;
         if (!FeatureFlags.LAUNCHER3_DISABLE_ICON_NORMALIZATION) {
             normalizer = IconNormalizer.getInstance(context);
-            if (Utilities.ATLEAST_OREO && iconAppTargetSdk >= Build.VERSION_CODES.O) {
+            if (Utilities.ATLEAST_NOUGAT && iconAppTargetSdk >= Build.VERSION_CODES.O) {
                 boolean[] outShape = new boolean[1];
                 AdaptiveIconDrawable dr = (AdaptiveIconDrawable)
                         context.getDrawable(R.drawable.adaptive_icon_drawable_wrapper).mutate();
                 dr.setBounds(0, 0, 1, 1);
                 scale = normalizer.getScale(icon, iconBounds, dr.getIconMask(), outShape);
-                if (Utilities.ATLEAST_OREO && FeatureFlags.LEGACY_ICON_TREATMENT &&
+                if (FeatureFlags.LEGACY_ICON_TREATMENT &&
                         !outShape[0]) {
                     Drawable wrappedIcon = wrapToAdaptiveIconDrawable(context, icon, scale);
                     if (wrappedIcon != icon) {
@@ -213,12 +213,12 @@ public class LauncherIcons {
      */
     public static Bitmap createIconBitmap(Drawable icon, Context context) {
         float scale = 1f;
-        if (FeatureFlags.ADAPTIVE_ICON_SHADOW && Utilities.ATLEAST_OREO &&
+        if (FeatureFlags.ADAPTIVE_ICON_SHADOW &&
                 icon instanceof AdaptiveIconDrawable) {
             scale = ShadowGenerator.getScaleForBounds(new RectF(0, 0, 0, 0));
         }
         Bitmap bitmap =  createIconBitmap(icon, context, scale);
-        if (FeatureFlags.ADAPTIVE_ICON_SHADOW && Utilities.ATLEAST_OREO &&
+        if (FeatureFlags.ADAPTIVE_ICON_SHADOW &&
                 icon instanceof AdaptiveIconDrawable) {
             bitmap = ShadowGenerator.getInstance(context).recreateIcon(bitmap);
         }
@@ -271,11 +271,18 @@ public class LauncherIcons {
             final int top = (textureHeight-height) / 2;
 
             sOldBounds.set(icon.getBounds());
-            if (Utilities.ATLEAST_OREO && icon instanceof AdaptiveIconDrawable) {
+            if (icon instanceof AdaptiveIconDrawable) {
                 int offset = Math.max((int)(ShadowGenerator.BLUR_FACTOR * iconBitmapSize),
                         Math.min(left, top));
                 int size = Math.max(width, height);
-                icon.setBounds(offset, offset, size, size);
+                if (Utilities.ATLEAST_OREO) {
+                    icon.setBounds(offset, offset, size, size);
+                } else {
+                    Rect bounds = new Rect(offset, offset, size, size);
+                    Utilities.scaleRectAboutCenter(bounds, scale);
+                    icon.setBounds(bounds);
+                    scale = 1f;
+                }
             } else {
                 icon.setBounds(left, top, left+width, top+height);
             }
@@ -296,7 +303,7 @@ public class LauncherIcons {
      * create AdaptiveIconDrawable.
      */
     static Drawable wrapToAdaptiveIconDrawable(Context context, Drawable drawable, float scale) {
-        if (!(FeatureFlags.LEGACY_ICON_TREATMENT && Utilities.ATLEAST_OREO)) {
+        if (!(FeatureFlags.LEGACY_ICON_TREATMENT)) {
             return drawable;
         }
 

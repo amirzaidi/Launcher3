@@ -21,7 +21,7 @@ public class DynamicDrawableFactory extends DrawableFactory {
     @Override
     public FastBitmapDrawable newIcon(Bitmap icon, ItemInfo info) {
         if (info != null &&
-                Utilities.ATLEAST_OREO &&
+                Utilities.ATLEAST_NOUGAT &&
                 info.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
                 DynamicClock.DESK_CLOCK.equals(info.getTargetComponent()) &&
                 info.user.equals(Process.myUserHandle())) {

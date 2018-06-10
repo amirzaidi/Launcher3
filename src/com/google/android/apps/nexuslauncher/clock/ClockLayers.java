@@ -75,7 +75,7 @@ public class ClockLayers {
         if (mDrawable instanceof LayerDrawable) {
             return (LayerDrawable) mDrawable;
         }
-        if (Utilities.ATLEAST_OREO && mDrawable instanceof AdaptiveIconDrawable) {
+        if (mDrawable instanceof AdaptiveIconDrawable) {
             AdaptiveIconDrawable adaptiveIconDrawable = (AdaptiveIconDrawable) mDrawable;
             if (adaptiveIconDrawable.getForeground() instanceof LayerDrawable) {
                 return (LayerDrawable) adaptiveIconDrawable.getForeground();

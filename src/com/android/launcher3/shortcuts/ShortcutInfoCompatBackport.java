@@ -28,6 +28,7 @@ import android.os.Process;
 import android.os.UserHandle;
 
 import com.android.launcher3.R;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -148,10 +149,9 @@ public class ShortcutInfoCompatBackport extends ShortcutInfoCompat {
 
     public Drawable getIcon(int density) {
         try {
-            return mContext.getPackageManager()
-                    .getResourcesForApplication(mPackageName)
-                    .getDrawableForDensity(mIcon, density);
-        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
+            return ReflectedSdkLoader.attemptDrawableLoad(mContext.getPackageManager()
+                    .getResourcesForApplication(mPackageName), mIcon, density);
+        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
             return mContext.getResources()
                     .getDrawableForDensity(R.drawable.ic_default_shortcut, density);
         }

@@ -25,6 +25,7 @@ import com.android.launcher3.shortcuts.DeepShortcutManager;
 import com.android.launcher3.util.ComponentKey;
 import com.google.android.apps.nexuslauncher.clock.CustomClock;
 import com.google.android.apps.nexuslauncher.clock.DynamicClock;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -40,6 +41,7 @@ public class CustomIconProvider extends DynamicIconProvider {
     public final static String DISABLE_PACK_PREF = "all_apps_disable_pack";
 
     private final Context mContext;
+    private final PackageManager mPm;
     private CustomDrawableFactory mFactory;
     private final BroadcastReceiver mDateChangeReceiver;
     private int mDateOfMonth;
@@ -47,6 +49,7 @@ public class CustomIconProvider extends DynamicIconProvider {
     public CustomIconProvider(Context context) {
         super(context);
         mContext = context;
+        mPm = mContext.getPackageManager();
         mFactory = (CustomDrawableFactory) DrawableFactory.get(context);
 
         mDateChangeReceiver = new BroadcastReceiver() {
@@ -93,23 +96,24 @@ public class CustomIconProvider extends DynamicIconProvider {
         ComponentName component = launcherActivityInfo.getComponentName();
         Drawable drawable = null;
         if (CustomIconUtils.usingValidPack(mContext) && isEnabledForApp(mContext, new ComponentKey(component, launcherActivityInfo.getUser()))) {
-            PackageManager pm = mContext.getPackageManager();
-            if (mFactory.packCalendars.containsKey(component)) {
-                try {
-                    Resources res = pm.getResourcesForApplication(mFactory.iconPack);
+            try {
+                Resources res = mPm.getResourcesForApplication(mFactory.iconPack);
+                ReflectedSdkLoader.loadLatestSupported(res);
+
+                if (mFactory.packCalendars.containsKey(component)) {
                     int drawableId = res.getIdentifier(mFactory.packCalendars.get(component)
                             + Calendar.getInstance().get(Calendar.DAY_OF_MONTH), "drawable", mFactory.iconPack);
                     if (drawableId != 0) {
-                        drawable = pm.getDrawable(mFactory.iconPack, drawableId, null);
+                        drawable = res.getDrawableForDensity(drawableId, iconDpi);
                     }
-                } catch (PackageManager.NameNotFoundException ignored) {
+                } else if (mFactory.packComponents.containsKey(component)) {
+                    int drawableId = mFactory.packComponents.get(component);
+                    drawable = res.getDrawableForDensity(drawableId, iconDpi);
+                    if (Utilities.ATLEAST_NOUGAT && mFactory.packClocks.containsKey(drawableId)) {
+                        drawable = CustomClock.getClock(mContext, drawable, mFactory.packClocks.get(drawableId), iconDpi);
+                    }
                 }
-            } else if (mFactory.packComponents.containsKey(component)) {
-                int drawableId = mFactory.packComponents.get(component);
-                drawable = pm.getDrawable(mFactory.iconPack, mFactory.packComponents.get(component), null);
-                if (Utilities.ATLEAST_OREO && mFactory.packClocks.containsKey(drawableId)) {
-                    drawable = CustomClock.getClock(mContext, drawable, mFactory.packClocks.get(drawableId), iconDpi);
-                }
+            } catch (PackageManager.NameNotFoundException ignored) {
             }
         }
 
@@ -124,7 +128,8 @@ public class CustomIconProvider extends DynamicIconProvider {
         Map<String, String> elementTags = new HashMap<>();
 
         try {
-            Resources resourcesForApplication = mContext.getPackageManager().getResourcesForApplication(component.getPackageName());
+            Resources resourcesForApplication = mPm.getResourcesForApplication(component.getPackageName());
+            ReflectedSdkLoader.loadLatestSupported(resourcesForApplication);
             AssetManager assets = resourcesForApplication.getAssets();
 
             XmlResourceParser parseXml = assets.openXmlResourceParser("AndroidManifest.xml");
@@ -153,7 +158,7 @@ public class CustomIconProvider extends DynamicIconProvider {
                 int resId = Integer.parseInt(appIcon.substring(1));
                 return resourcesForApplication.getDrawableForDensity(resId, iconDpi);
             }
-        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException | IOException | XmlPullParserException ex) {
+        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException | IOException | XmlPullParserException | NumberFormatException ex) {
             ex.printStackTrace();
         }
         return null;
