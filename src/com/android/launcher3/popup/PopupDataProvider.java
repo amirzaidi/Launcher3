@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.Launcher;
+import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.badge.BadgeInfo;
 import com.android.launcher3.notification.NotificationInfo;
@@ -54,11 +55,7 @@ public class PopupDataProvider implements NotificationListener.NotificationsChan
     private static final String TAG = "PopupDataProvider";
 
     /** Note that these are in order of priority. */
-    private static final SystemShortcut[] SYSTEM_SHORTCUTS = new SystemShortcut[] {
-            new SystemShortcut.Edit(),
-            new SystemShortcut.AppInfo(),
-            new SystemShortcut.Widgets(),
-    };
+    private final SystemShortcut[] SYSTEM_SHORTCUTS;
 
     private final Launcher mLauncher;
 
@@ -69,6 +66,11 @@ public class PopupDataProvider implements NotificationListener.NotificationsChan
 
     public PopupDataProvider(Launcher launcher) {
         mLauncher = launcher;
+        SYSTEM_SHORTCUTS = new SystemShortcut[] {
+                Utilities.getOverrideObject(SystemShortcut.Custom.class, launcher, R.string.custom_shortcut_class),
+                new SystemShortcut.AppInfo(),
+                new SystemShortcut.Widgets(),
+        };
     }
 
     @Override
