@@ -155,7 +155,10 @@ public class CustomIconProvider extends DynamicIconProvider {
             parseXml.close();
 
             if (appIcon != null) {
-                int resId = Integer.parseInt(appIcon.substring(1));
+                int resId = resourcesForApplication.getIdentifier(appIcon, null, component.getPackageName());
+                if (resId == 0) {
+                    resId = Integer.parseInt(appIcon.substring(1));
+                }
                 return resourcesForApplication.getDrawableForDensity(resId, iconDpi);
             }
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException | IOException | XmlPullParserException | NumberFormatException ex) {
