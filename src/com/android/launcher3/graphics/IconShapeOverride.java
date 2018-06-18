@@ -29,7 +29,6 @@ import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,7 +37,7 @@ import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
 import com.android.launcher3.util.LooperExecutor;
 
 import java.lang.reflect.Field;
@@ -61,7 +60,7 @@ public class IconShapeOverride {
 
     public static boolean isSupported(Context context) {
         if (!Utilities.ATLEAST_OREO) {
-            return ReflectedSdkLoader.sFeatureLevel == ReflectedSdkLoader.FEATURE_LEVEL.O;
+            return DrawableBackportLoader.supportsAdaptiveBackport();
         }
 
         try {

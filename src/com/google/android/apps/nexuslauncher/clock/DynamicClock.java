@@ -20,7 +20,7 @@ import com.android.launcher3.LauncherModel;
 import com.android.launcher3.MainThreadExecutor;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.config.FeatureFlags;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
 import com.android.launcher3.graphics.IconNormalizer;
 import com.android.launcher3.util.Preconditions;
 import com.google.android.apps.nexuslauncher.utils.ActionIntentFilter;
@@ -82,7 +82,7 @@ public class DynamicClock extends BroadcastReceiver
                 int levelPerTickIcon = metaData.getInt("com.google.android.apps.nexuslauncher.LEVEL_PER_TICK_ICON_ROUND", 0);
                 if (levelPerTickIcon != 0) {
                     Resources res = packageManager.getResourcesForApplication(applicationInfo);
-                    ReflectedSdkLoader.loadLatestSupported(res);
+                    DrawableBackportLoader.setLatestSupported(res);
                     Drawable drawableForDensity = res.getDrawableForDensity(levelPerTickIcon, iconDpi);
                     layers.mDrawable = drawableForDensity.mutate();
                     layers.mHourIndex = metaData.getInt("com.google.android.apps.nexuslauncher.HOUR_LAYER_INDEX", -1);

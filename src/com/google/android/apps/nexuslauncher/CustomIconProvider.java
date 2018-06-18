@@ -17,7 +17,7 @@ import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.compat.LauncherAppsCompat;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
@@ -90,7 +90,7 @@ public class CustomIconProvider extends DynamicIconProvider {
         if (CustomIconUtils.usingValidPack(mContext) && isEnabledForApp(mContext, new ComponentKey(component, info.getUser()))) {
             try {
                 Resources res = mPm.getResourcesForApplication(mFactory.iconPack);
-                ReflectedSdkLoader.loadLatestSupported(res);
+                DrawableBackportLoader.setLatestSupported(res);
 
                 if (mFactory.packCalendars.containsKey(component)) {
                     int drawableId = res.getIdentifier(mFactory.packCalendars.get(component)
@@ -101,11 +101,11 @@ public class CustomIconProvider extends DynamicIconProvider {
                 } else if (mFactory.packComponents.containsKey(component)) {
                     int drawableId = mFactory.packComponents.get(component);
                     drawable = res.getDrawableForDensity(drawableId, iconDpi);
-                    if (Utilities.ATLEAST_NOUGAT && mFactory.packClocks.containsKey(drawableId)) {
+                    if ((Utilities.ATLEAST_OREO || DrawableBackportLoader.adaptiveBackportEnabled()) && mFactory.packClocks.containsKey(drawableId)) {
                         drawable = CustomClock.getClock(mContext, drawable, mFactory.packClocks.get(drawableId), iconDpi);
                     }
                 }
-            } catch (PackageManager.NameNotFoundException ignored) {
+            } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {
             }
         }
 

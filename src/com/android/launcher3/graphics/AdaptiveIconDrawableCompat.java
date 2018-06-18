@@ -164,9 +164,6 @@ public class AdaptiveIconDrawableCompat extends Drawable implements Drawable.Cal
         Context context = LauncherAppState.getInstanceNoCreate().getContext();
         String mask = Utilities.getDevicePrefs(context)
                 .getString(IconShapeOverride.KEY_PREFERENCE, "");
-        if (mask.isEmpty()) {
-            mask = context.getString(R.string.icon_shape_override_default);
-        }
         if (sMask == null) {
             sMask = PathParser.createPathFromPathData(mask);
         }

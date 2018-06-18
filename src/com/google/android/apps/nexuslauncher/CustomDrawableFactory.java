@@ -16,7 +16,8 @@ import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherModel;
 import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.Utilities;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
+import com.android.launcher3.graphics.IconShapeOverride;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.LooperExecutor;
 import com.google.android.apps.nexuslauncher.clock.CustomClock;
@@ -53,6 +54,8 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
             }
         };
 
+        DrawableBackportLoader.setIconShapeOverride(!Utilities.getDevicePrefs(context)
+                .getString(IconShapeOverride.KEY_PREFERENCE, "").isEmpty());
         new LooperExecutor(LauncherModel.getWorkerLooper()).execute(this);
     }
 
@@ -101,14 +104,14 @@ public class CustomDrawableFactory extends DynamicDrawableFactory implements Run
         ComponentName componentName = info.getTargetComponent();
         if (packComponents.containsKey(info.getTargetComponent()) &&
                 CustomIconProvider.isEnabledForApp(mContext, new ComponentKey(componentName, info.user))) {
-            if (Utilities.ATLEAST_NOUGAT &&
+            if ((Utilities.ATLEAST_OREO || DrawableBackportLoader.adaptiveBackportEnabled()) &&
                     info.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
                     info.user.equals(Process.myUserHandle())) {
                 int drawableId = packComponents.get(componentName);
                 if (packClocks.containsKey(drawableId)) {
                     try {
                         Resources res = mContext.getPackageManager().getResourcesForApplication(iconPack);
-                        ReflectedSdkLoader.loadLatestSupported(res);
+                        DrawableBackportLoader.setLatestSupported(res);
                         Drawable drawable = res.getDrawableForDensity(drawableId, icon.getDensity());
                         return mCustomClockDrawer.drawIcon(icon, drawable, packClocks.get(drawableId));
                     } catch (PackageManager.NameNotFoundException e) {

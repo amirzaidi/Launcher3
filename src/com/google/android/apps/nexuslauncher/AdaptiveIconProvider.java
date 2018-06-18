@@ -8,7 +8,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.android.launcher3.IconProvider;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
 
 import java.lang.reflect.Field;
 
@@ -16,7 +16,7 @@ public class AdaptiveIconProvider extends IconProvider {
     private static Field sActivityInfo;
 
     static {
-        if (ReflectedSdkLoader.sFeatureLevel == ReflectedSdkLoader.FEATURE_LEVEL.O) {
+        if (DrawableBackportLoader.supportsAdaptiveBackport()) {
             try {
                 sActivityInfo = LauncherActivityInfo.class.getDeclaredField("mActivityInfo");
                 sActivityInfo.setAccessible(true);
@@ -37,7 +37,7 @@ public class AdaptiveIconProvider extends IconProvider {
     @Override
     public Drawable getIcon(LauncherActivityInfo info, int iconDpi, boolean flattenDrawable) {
         Drawable drawable = null;
-        if (ReflectedSdkLoader.sFeatureLevel == ReflectedSdkLoader.FEATURE_LEVEL.O) {
+        if (DrawableBackportLoader.adaptiveBackportEnabled()) {
             // Best implementation that extracts the drawable from the manifest
             drawable = CustomIconUtils.extractIconByTag(mPm, info.getComponentName(), iconDpi, "icon");
             if (drawable == null && sActivityInfo != null) {
@@ -47,7 +47,7 @@ public class AdaptiveIconProvider extends IconProvider {
                     final int iconRes = reflectedInfo.getIconResource();
                     if (iconDpi != 0 && iconRes != 0) {
                         final Resources resources = mPm.getResourcesForApplication(reflectedInfo.applicationInfo);
-                        ReflectedSdkLoader.loadLatestSupported(resources);
+                        DrawableBackportLoader.setLatestSupported(resources);
                         drawable = resources.getDrawableForDensity(iconRes, iconDpi);
                     }
                 } catch (Exception e) {

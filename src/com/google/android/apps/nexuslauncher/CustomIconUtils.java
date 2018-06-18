@@ -18,7 +18,7 @@ import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.allapps.search.DefaultAppSearchAlgorithm;
 import com.android.launcher3.compat.LauncherAppsCompat;
-import com.android.launcher3.compat.ReflectedSdkLoader;
+import com.android.launcher3.compat.DrawableBackportLoader;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
@@ -135,6 +135,8 @@ public class CustomIconUtils {
     static void parsePack(CustomDrawableFactory factory, PackageManager pm, String iconPack) {
         try {
             Resources res = pm.getResourcesForApplication(iconPack);
+            DrawableBackportLoader.setLatestSupported(res);
+
             int resId = res.getIdentifier("appfilter", "xml", iconPack);
             if (resId != 0) {
                 String compStart = "ComponentInfo{";
@@ -193,7 +195,7 @@ public class CustomIconUtils {
 
         try {
             Resources resourcesForApplication = pm.getResourcesForApplication(component.getPackageName());
-            ReflectedSdkLoader.loadLatestSupported(resourcesForApplication);
+            DrawableBackportLoader.setLatestSupported(resourcesForApplication);
             AssetManager assets = resourcesForApplication.getAssets();
 
             XmlResourceParser parseXml = assets.openXmlResourceParser("AndroidManifest.xml");
@@ -220,7 +222,7 @@ public class CustomIconUtils {
 
             if (appIcon != null) {
                 int resId = resourcesForApplication.getIdentifier(appIcon, null, component.getPackageName());
-                return ReflectedSdkLoader.attemptDrawableLoad(resourcesForApplication, resId == 0
+                return DrawableBackportLoader.loadLatestDrawable(resourcesForApplication, resId == 0
                         ? Integer.parseInt(appIcon.substring(1))
                         : resId, iconDpi);
             }

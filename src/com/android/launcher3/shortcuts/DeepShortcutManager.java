@@ -16,22 +16,32 @@
 
 package com.android.launcher3.shortcuts;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.LauncherApps.ShortcutQuery;
+import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.launcher3.ItemInfo;
 import com.android.launcher3.LauncherSettings;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.compat.DrawableBackportLoader;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +57,21 @@ public class DeepShortcutManager {
 
     private static DeepShortcutManager sInstance;
     private static final Object sInstanceLock = new Object();
+
+    private static Method sHasIconResource;
+    private static Field sIconResId;
+
+    static {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+            try {
+                sHasIconResource = ShortcutInfo.class.getDeclaredMethod("hasIconResource");
+                sIconResId = ShortcutInfo.class.getDeclaredField("mIconResId");
+                sIconResId.setAccessible(true);
+            } catch (NoSuchFieldException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static DeepShortcutManager getInstance(Context context) {
         synchronized (sInstanceLock) {
@@ -166,8 +191,7 @@ public class DeepShortcutManager {
     public Drawable getShortcutIconDrawable(ShortcutInfoCompat shortcutInfo, int density) {
         if (Utilities.ATLEAST_NOUGAT_MR1) {
             try {
-                Drawable icon = mLauncherApps.getShortcutIconDrawable(
-                        shortcutInfo.getShortcutInfo(), density);
+                Drawable icon = getShortcutIconDrawableBackport(shortcutInfo, density);
                 mWasLastCallSuccess = true;
                 return icon;
             } catch (SecurityException|IllegalStateException e) {
@@ -178,6 +202,24 @@ public class DeepShortcutManager {
             return DeepShortcutManagerBackport.getShortcutIconDrawable(shortcutInfo, density);
         }
         return null;
+    }
+
+    @SuppressLint("NewApi")
+    @TargetApi(25)
+    public Drawable getShortcutIconDrawableBackport(@NonNull ShortcutInfoCompat shortcutInfo, int density) {
+        ShortcutInfo shortcut = shortcutInfo.getShortcutInfo();
+        if (sHasIconResource != null && sIconResId != null) {
+            try {
+                if ((boolean) sHasIconResource.invoke(shortcut)) {
+                    final ApplicationInfo ai = mLauncherApps.getApplicationInfo(shortcut.getPackage(), 0, shortcut.getUserHandle());
+                    final Resources res = mContext.getPackageManager().getResourcesForApplication(ai);
+                    return DrawableBackportLoader.loadLatestDrawable(res, (int) sIconResId.get(shortcut), density);
+                }
+            } catch (IllegalAccessException | InvocationTargetException | PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return mLauncherApps.getShortcutIconDrawable(shortcut, density);
     }
 
     /**
