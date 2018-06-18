@@ -36,23 +36,27 @@ public class AdaptiveIconProvider extends IconProvider {
 
     @Override
     public Drawable getIcon(LauncherActivityInfo info, int iconDpi, boolean flattenDrawable) {
-        if (sActivityInfo != null) {
-            try {
-                ActivityInfo reflectedInfo = (ActivityInfo) sActivityInfo.get(info);
-                final int iconRes = reflectedInfo.getIconResource();
-                if (iconDpi != 0 && iconRes != 0) {
-                    final Resources resources = mPm.getResourcesForApplication(reflectedInfo.applicationInfo);
-                    ReflectedSdkLoader.loadLatestSupported(resources);
-                    Drawable icon = resources.getDrawableForDensity(iconRes, iconDpi);
-                    if (icon != null) {
-                        return icon;
+        Drawable drawable = null;
+        if (ReflectedSdkLoader.sFeatureLevel == ReflectedSdkLoader.FEATURE_LEVEL.O) {
+            // Best implementation that extracts the drawable from the manifest
+            drawable = CustomIconUtils.extractIconByTag(mPm, info.getComponentName(), iconDpi, "icon");
+            if (drawable == null && sActivityInfo != null) {
+                try {
+                    // Fallback implementation which does not work for recursive references
+                    ActivityInfo reflectedInfo = (ActivityInfo) sActivityInfo.get(info);
+                    final int iconRes = reflectedInfo.getIconResource();
+                    if (iconDpi != 0 && iconRes != 0) {
+                        final Resources resources = mPm.getResourcesForApplication(reflectedInfo.applicationInfo);
+                        ReflectedSdkLoader.loadLatestSupported(resources);
+                        drawable = resources.getDrawableForDensity(iconRes, iconDpi);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalAccessException | PackageManager.NameNotFoundException | Resources.NotFoundException e) {
-                e.printStackTrace();
             }
         }
-
-        return super.getIcon(info, iconDpi, flattenDrawable);
+        return drawable == null
+                ? super.getIcon(info, iconDpi, flattenDrawable)
+                : drawable.mutate();
     }
 }

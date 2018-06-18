@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.graphics.drawable.Drawable;
 import android.os.UserHandle;
 
 import com.android.launcher3.LauncherAppState;
@@ -16,6 +18,7 @@ import com.android.launcher3.LauncherModel;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.allapps.search.DefaultAppSearchAlgorithm;
 import com.android.launcher3.compat.LauncherAppsCompat;
+import com.android.launcher3.compat.ReflectedSdkLoader;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.graphics.DrawableFactory;
 import com.android.launcher3.shortcuts.DeepShortcutManager;
@@ -182,5 +185,48 @@ public class CustomIconUtils {
         } catch (PackageManager.NameNotFoundException | XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    static Drawable extractIconByTag(PackageManager pm, ComponentName component, int iconDpi, String tag) {
+        String appIcon = null;
+        Map<String, String> elementTags = new HashMap<>();
+
+        try {
+            Resources resourcesForApplication = pm.getResourcesForApplication(component.getPackageName());
+            ReflectedSdkLoader.loadLatestSupported(resourcesForApplication);
+            AssetManager assets = resourcesForApplication.getAssets();
+
+            XmlResourceParser parseXml = assets.openXmlResourceParser("AndroidManifest.xml");
+            while (parseXml.next() != XmlPullParser.END_DOCUMENT) {
+                if (parseXml.getEventType() == XmlPullParser.START_TAG) {
+                    String name = parseXml.getName();
+                    for (int i = 0; i < parseXml.getAttributeCount(); i++) {
+                        elementTags.put(parseXml.getAttributeName(i), parseXml.getAttributeValue(i));
+                    }
+                    if (elementTags.containsKey("icon")) {
+                        if (name.equals("application")) {
+                            appIcon = elementTags.get(tag);
+                        } else if ((name.equals("activity") || name.equals("activity-alias")) &&
+                                elementTags.containsKey("name") &&
+                                elementTags.get("name").equals(component.getClassName())) {
+                            appIcon = elementTags.get(tag);
+                            break;
+                        }
+                    }
+                    elementTags.clear();
+                }
+            }
+            parseXml.close();
+
+            if (appIcon != null) {
+                int resId = resourcesForApplication.getIdentifier(appIcon, null, component.getPackageName());
+                return ReflectedSdkLoader.attemptDrawableLoad(resourcesForApplication, resId == 0
+                        ? Integer.parseInt(appIcon.substring(1))
+                        : resId, iconDpi);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
