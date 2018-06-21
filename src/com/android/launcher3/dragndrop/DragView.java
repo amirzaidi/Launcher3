@@ -113,10 +113,6 @@ public class DragView extends View {
     // Below variable only needed IF FeatureFlags.LAUNCHER3_SPRING_ICONS is {@code true}
     private Drawable mBgSpringDrawable, mFgSpringDrawable;
     private SpringFloatValue mTranslateX, mTranslateY;
-    private AdaptiveIconDrawable mAdaptiveIcon;
-    private Rect mAdaptiveIconBounds;
-    private Rect mAdaptiveIconBackportBounds = new Rect();
-    private Rect mAdaptiveIconShapeBounds;
     private Path mScaledMaskPath;
     private Drawable mBadge;
     private ColorMatrixColorFilter mBaseFilter;
@@ -161,10 +157,6 @@ public class DragView extends View {
                 if (getParent() == null) {
                     animation.cancel();
                 }
-
-                if (!Utilities.ATLEAST_NOUGAT_MR1 && mAdaptiveIcon != null) {
-                    invalidate();
-                }
             }
         });
 
@@ -201,7 +193,7 @@ public class DragView extends View {
      */
     @TargetApi(Build.VERSION_CODES.O)
     public void setItemInfo(final ItemInfo info) {
-        if (!(FeatureFlags.LAUNCHER3_SPRING_ICONS && Utilities.ATLEAST_NOUGAT)) {
+        if (!(FeatureFlags.LAUNCHER3_SPRING_ICONS && Utilities.ATLEAST_NOUGAT_MR1)) {
             return;
         }
         if (info.itemType != LauncherSettings.Favorites.ITEM_TYPE_APPLICATION &&
@@ -234,14 +226,14 @@ public class DragView extends View {
 
                     Utilities.scaleRectAboutCenter(bounds,
                             IconNormalizer.getInstance(mLauncher).getScale(dr, null, null, null));
-                    mAdaptiveIcon = (AdaptiveIconDrawable) dr;
+                    AdaptiveIconDrawable adaptiveIcon = (AdaptiveIconDrawable) dr;
 
                     // Shrink very tiny bit so that the clip path is smaller than the original bitmap
                     // that has anti aliased edges and shadows.
-                    mAdaptiveIconBounds = new Rect(bounds);
-                    Utilities.scaleRectAboutCenter(mAdaptiveIconBounds, 0.98f);
-                    mAdaptiveIcon.setBounds(mAdaptiveIconBounds);
-                    final Path mask = mAdaptiveIcon.getIconMask();
+                    Rect shrunkBounds = new Rect(bounds);
+                    Utilities.scaleRectAboutCenter(shrunkBounds, 0.98f);
+                    adaptiveIcon.setBounds(shrunkBounds);
+                    final Path mask = adaptiveIcon.getIconMask();
 
                     mTranslateX = new SpringFloatValue(DragView.this,
                             w * AdaptiveIconDrawable.getExtraInsetFraction());
@@ -252,13 +244,12 @@ public class DragView extends View {
                             (int) (-bounds.width() * AdaptiveIconDrawable.getExtraInsetFraction()),
                             (int) (-bounds.height() * AdaptiveIconDrawable.getExtraInsetFraction())
                     );
-                    mAdaptiveIconShapeBounds = bounds;
-                    mBgSpringDrawable = mAdaptiveIcon.getBackground();
+                    mBgSpringDrawable = adaptiveIcon.getBackground();
                     if (mBgSpringDrawable == null) {
                         mBgSpringDrawable = new ColorDrawable(Color.TRANSPARENT);
                     }
                     mBgSpringDrawable.setBounds(bounds);
-                    mFgSpringDrawable = mAdaptiveIcon.getForeground();
+                    mFgSpringDrawable = adaptiveIcon.getForeground();
                     if (mFgSpringDrawable == null) {
                         mFgSpringDrawable = new ColorDrawable(Color.TRANSPARENT);
                     }
@@ -461,29 +452,6 @@ public class DragView extends View {
 
         if (mScaledMaskPath != null) {
             int cnt = canvas.save();
-
-            if (!Utilities.ATLEAST_NOUGAT_MR1 && mAdaptiveIcon != null) {
-                mAdaptiveIconBackportBounds.left = 0;
-                mAdaptiveIconBackportBounds.top = 0;
-                mAdaptiveIconBackportBounds.right = (int)(mBitmap.getWidth() * getScaleX());
-                mAdaptiveIconBackportBounds.bottom = (int)(mBitmap.getHeight() * getScaleY());
-
-                Utilities.scaleRectAboutCenter(mAdaptiveIconBackportBounds, 1f / getScaleX());
-
-                int blurMargin = (int) mLauncher.getResources()
-                        .getDimension(R.dimen.blur_size_medium_outline) / 2;
-                mAdaptiveIconBackportBounds.inset(blurMargin, blurMargin);
-
-                Utilities.scaleRectAboutCenter(mAdaptiveIconBackportBounds,
-                        IconNormalizer.getInstance(mLauncher).getScale(mAdaptiveIcon, null, null, null));
-
-                mAdaptiveIcon.setBounds(mAdaptiveIconBackportBounds);
-                mScaledMaskPath = mAdaptiveIcon.getIconMask();
-
-                mBgSpringDrawable.setBounds(mAdaptiveIconShapeBounds);
-                mFgSpringDrawable.setBounds(mAdaptiveIconShapeBounds);
-            }
-
             canvas.clipPath(mScaledMaskPath);
             mBgSpringDrawable.draw(canvas);
             canvas.translate(mTranslateX.mValue, mTranslateY.mValue);
