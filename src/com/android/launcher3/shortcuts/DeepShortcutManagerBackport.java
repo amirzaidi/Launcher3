@@ -90,7 +90,8 @@ public class DeepShortcutManagerBackport {
                         }
                         if (parsedData.containsKey("name") &&
                                 parsedData.get("name").equals("android.app.shortcuts") &&
-                                parsedData.containsKey("resource")) {
+                                parsedData.containsKey("resource") &&
+                                parsedData.get("resource").matches("@\\d+")) {
                             resource = parsedData.get("resource");
                         }
                     }
