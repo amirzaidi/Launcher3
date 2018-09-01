@@ -91,9 +91,6 @@ public class CustomIconUtils {
 
                 boolean noPack = CustomIconUtils.getCurrentPack(context).isEmpty();
                 Utilities.getPrefs(context).edit().putBoolean(DefaultAppSearchAlgorithm.SEARCH_HIDDEN_APPS, !noPack).apply();
-                if (noPack) {
-                    CustomAppFilter.resetAppFilter(context);
-                }
                 for (UserHandle user : userManagerCompat.getUserProfiles()) {
                     model.onPackagesReload(user);
                 }
