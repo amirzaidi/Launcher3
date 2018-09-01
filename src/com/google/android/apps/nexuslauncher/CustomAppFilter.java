@@ -28,7 +28,7 @@ public class CustomAppFilter extends NexusAppFilter {
         if (CustomIconUtils.usingValidPack(mContext)) {
             return !isHiddenApp(mContext, new ComponentKey(componentName, user));
         }
-        return super.shouldShowApp(componentName, user);
+        return !isHiddenApp(mContext, new ComponentKey(componentName, user)) && super.shouldShowApp(componentName, user);
     }
 
     static void resetAppFilter(Context context) {
