@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="utf-8"?>
+<!--
 /*
 * Copyright (C) 2017 The Android Open Source Project
 *
@@ -15,12 +15,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
- -->
+-->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="long_press_widget_to_add" msgid="4001616142797446267">"Toque sem soltar para escolher um atalho."</string>
-    <string name="long_accessible_way_to_add" msgid="2725225828389948328">"Toque duas vezes sem soltar para escolher um atalho ou utilize ações personalizadas."</string>
-    <string name="widget_button_text" msgid="4221900832360456858">"Atalhos"</string>
-    <string name="widgets_bottom_sheet_title" msgid="3949835990909395998">"Atalhos da aplicação <xliff:g id="NAME">%1$s</xliff:g>"</string>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Message to tell the user to press and hold on a shortcut to add it [CHAR_LIMIT=50] -->
+    <string name="long_press_widget_to_add">Toque sem soltar para escolher um atalho.</string>
+    <!-- Accessibility spoken hint message in widget picker, which allows user to add a shortcut. Custom action is the label for additional accessibility actions available in this mode [CHAR_LIMIT=100] -->
+    <string name="long_accessible_way_to_add">Toque duas vezes sem soltar para escolher um atalho ou utilizar ações personalizadas.</string>
+    <!-- Text for shortcut add button -->
+    <string name="widget_button_text">Atalhos</string>
+
+    <!-- Strings for widgets & more in the popup container/bottom sheet -->
+    <!-- Title for a bottom sheet that shows shortcuts for a particular app -->
+    <string name="widgets_bottom_sheet_title">&lt;xliff:g id=\"name\" example=\"Messenger\" &gt;%1$s&lt;/xliff:g&gt; atalhos</string>
+
 </resources>
