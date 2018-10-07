@@ -24,13 +24,13 @@
     <string name="work_folder_name" msgid="3753320833950115786">"Jobb"</string>
     <string name="activity_not_found" msgid="8071924732094499514">"Appen er ikke installert."</string>
     <string name="activity_not_available" msgid="7456344436509528827">"Appen er ikke tilgjengelig"</string>
-    <string name="safemode_shortcut_error" msgid="9160126848219158407">"En nedlastet app er deaktivert i sikker modus"</string>
-    <string name="safemode_widget_error" msgid="4863470563535682004">"Moduler er deaktivert i sikker modus"</string>
+    <string name="safemode_shortcut_error" msgid="9160126848219158407">"En nedlastet app er slått av i sikker modus"</string>
+    <string name="safemode_widget_error" msgid="4863470563535682004">"Moduler er slått av i sikker modus"</string>
     <string name="shortcut_not_available" msgid="2536503539825726397">"Snarveien er ikke tilgjengelig"</string>
     <string name="home_screen" msgid="806512411299847073">"Startskjerm"</string>
-    <string name="custom_actions" msgid="3747508247759093328">"Tilpassede handlinger"</string>
+    <string name="custom_actions" msgid="3747508247759093328">"Selvvalgte handlinger"</string>
     <string name="long_press_widget_to_add" msgid="7699152356777458215">"Trykk og hold inne for å plukke opp en modul."</string>
-    <string name="long_accessible_way_to_add" msgid="4289502106628154155">"Dobbelttrykk og hold inne for å velge en modul eller bruke tilpassede handlinger."</string>
+    <string name="long_accessible_way_to_add" msgid="4289502106628154155">"Dobbelttrykk og hold inne for å velge en modul eller bruke selvvalgte handlinger."</string>
     <string name="widget_dims_format" msgid="2370757736025621599">"%1$d × %2$d"</string>
     <string name="widget_accessible_dims_format" msgid="3640149169885301790">"%1$d bredde x %2$d høyde"</string>
     <string name="add_item_request_drag_hint" msgid="5899764264480397019">"Trykk og hold for å plassere manuelt"</string>
@@ -55,7 +55,7 @@
     <string name="permdesc_write_settings" msgid="5440712911516509985">"Lar appen endre innstillingene og snarveiene på startsiden."</string>
     <string name="msg_no_phone_permission" msgid="9208659281529857371">"<xliff:g id="APP_NAME">%1$s</xliff:g> har ikke tillatelse til å ringe"</string>
     <string name="gadget_error_text" msgid="6081085226050792095">"Problem ved innlasting av modul"</string>
-    <string name="gadget_setup_text" msgid="8274003207686040488">"Konfigurering"</string>
+    <string name="gadget_setup_text" msgid="8274003207686040488">"Oppsett"</string>
     <string name="uninstall_system_app_text" msgid="4172046090762920660">"Dette er en systemapp som ikke kan avinstalleres."</string>
     <string name="folder_hint_text" msgid="6617836969016293992">"Mappe uten navn"</string>
     <string name="disabled_app_label" msgid="6673129024321402780">"Slo av <xliff:g id="APP_NAME">%1$s</xliff:g>"</string>
@@ -90,7 +90,7 @@
     <string name="icon_shape_squircle" msgid="5658049910802669495">"Superellipse"</string>
     <string name="icon_shape_circle" msgid="6550072265930144217">"Sirkel"</string>
     <string name="icon_shape_teardrop" msgid="4525869388200835463">"Dråpe"</string>
-    <string name="icon_shape_override_progress" msgid="3461735694970239908">"Aktiverer endringer av formen på ikonet"</string>
+    <string name="icon_shape_override_progress" msgid="3461735694970239908">"Tar i bruk endringer av formen på ikonet"</string>
     <string name="package_state_unknown" msgid="7592128424511031410">"Ukjent"</string>
     <string name="abandoned_clean_this" msgid="7610119707847920412">"Fjern"</string>
     <string name="abandoned_search" msgid="891119232568284442">"Søk"</string>
@@ -132,13 +132,13 @@
     <string name="label_search">Søk</string>
     <string name="label_voice_search">Talesøk</string>
     <string name="pref_icon_pack">Ikonpakke</string>
-    <string name="state_loading">Anvender…</string>
+    <string name="state_loading">Tar i bruk …</string>
     <string name="smartspace_preferences_in_settings">Kort fortalt</string>
     <string name="smartspace_preferences_in_settings_desc">Øverst på startskjermen</string>
-    <string name="title_show_google_app">Skjerm %1$s</string>
+    <string name="title_show_google_app">%1$s skjerm</string>
     <string name="msg_minus_one_on_left">Til venstre for hovedstartskjermen</string>
     <string name="about">Info</string>
-    <string name="title_google_app">Google-appen</string>
+    <string name="title_google_app">Google-app</string>
     <string name="title_app_suggestions">Vis appforslag</string>
     <string name="summary_app_suggestions">Øverst på Alle apper-listen</string>
     <string name="about_app_version">Versjon</string>
@@ -152,7 +152,7 @@
     <string name="icon_shape_cylinder">Sylinder</string>
     <string name="theme_title">Tema</string>
     <string name="theme_automatic">Automatisk</string>
-    <string name="theme_default">Misligholde</string>
+    <string name="theme_default">Standard</string>
     <string name="theme_light">Lys</string>
     <string name="theme_dark">Mørk</string>
     <string name="theme_transparent">Gjennomsiktig</string>
