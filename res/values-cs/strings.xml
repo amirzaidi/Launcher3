@@ -131,7 +131,7 @@
     <string name="smartspace_preferences">Předvolby</string>
     <string name="label_search">Hledat</string>
     <string name="label_voice_search">Hlasové vyhledávání</string>
-    <string name="pref_icon_pack">Ikona balíčku</string>
+    <string name="pref_icon_pack">Balíček ikon</string>
     <string name="state_loading">Aplikuji…</string>
     <string name="smartspace_preferences_in_settings">Přehled událostí</string>
     <string name="smartspace_preferences_in_settings_desc">V horní části plochy</string>
@@ -147,17 +147,17 @@
     <string name="msg_disable_suggestions_prompt">Na začátku seznamu aplikací se nebudou zobrazovat návrhy a údaje o využití, na základě kterých byly návrhy vytvářeny, budou trvale vymazány.</string>
     <string name="label_turn_off_suggestions">VYPNOUT</string>
     <string name="action_edit">Upravit</string>
-  <string name="hide_app_sum">Skrýt aplikaci v seznamu aplikací</string>
-  <string name="hide_app">Skrýt aplikaci</string>
+    <string name="hide_app_sum">Skrýt aplikaci v seznamu aplikací</string>
+    <string name="hide_app">Skrýt aplikaci</string>
     <string name="icon_shape_rounded_square">Zaoblený čtverec</string>
     <string name="smartspace_hours_mins">%1$s %2$s</string>
     <string name="icon_shape_cylinder">Válec</string>
     <string name="theme_title">Téma</string>
-    <string name="theme_automatic">Automatický</string>
-    <string name="theme_default">Výchozí nastavení</string>
-    <string name="theme_light">Světlo</string>
-    <string name="theme_dark">Temný</string>
-    <string name="theme_transparent">Průhledný</string>
+    <string name="theme_automatic">Automatické</string>
+    <string name="theme_default">Výchozí</string>
+    <string name="theme_light">Světlé</string>
+    <string name="theme_dark">Tmavé</string>
+    <string name="theme_transparent">Průhledné</string>
     <string name="pref_open_source_licenses_title">Licence open source</string>
     <string name="about_donate">Darovat</string>
 </resources>
