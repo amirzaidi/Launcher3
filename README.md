@@ -5,6 +5,8 @@ By Amir Zaidi
 
 Play Store release: https://play.google.com/store/apps/details?id=amirz.rootless.nexuslauncher
 
+F-Droid release: https://f-droid.org/packages/amirz.rootless.nexuslauncher/
+
 Photos and videos: https://photos.app.goo.gl/qdcAcLOdiu8Kl1Bh1 
 
 APK Downloads: https://github.com/amirzaidi/launcher3/releases
